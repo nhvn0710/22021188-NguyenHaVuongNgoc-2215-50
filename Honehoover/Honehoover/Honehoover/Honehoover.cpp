@@ -1,8 +1,8 @@
 #include <SDL.h>
-#include <stdio.h>
+#include <cstdio>
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+constexpr int SCREEN_WIDTH = 640;
+constexpr int SCREEN_HEIGHT = 480;
 
 int main( int argc, char* args[] )
 {
@@ -25,7 +25,7 @@ int main( int argc, char* args[] )
 		{
 			screenSurface = SDL_GetWindowSurface( window );
 
-			SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xAA, 0xFF, 0xEE ) );
+			SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xAA, 0xFF, 0xDD ) );
 
 			SDL_UpdateWindowSurface( window );
 
