@@ -1,22 +1,38 @@
 #include <iostream>
-
+#include <vector>
 using namespace std;
 
-int gcd(int a, int b)
+void siameseMagicSquare(int n)
 {
-    if (b == 0)
+    vector<vector<int>> A(n + 2, vector<int>(n + 2, 0));
+    int x = n / 2, y = n - 1;
+    for (int i = 1; i < n * n + 1; i++)
     {
-        return abs(a);
+        int tmpx = x, tmpy = y;
+        x++; y++;
+        if (x > n) x = x % n;
+        if (y > n) y = y % n;
+        if (A[x][y] != 0)
+        {
+            x = tmpx; y = tmpy;
+            y--;
+        }
+        A[x][y] = i;
     }
-    else
+    for (int j = n; j > 0; j--)
     {
-        return gcd(b, a % b);
+        for (int i = 1; i < n + 1; i++)
+        {
+            cout << A[i][j] << " ";
+        }
+        cout << endl;
     }
 }
 
 int main() {
-    int t, m;
-    cin >> t >> m;
-    cout << gcd(t, m);
+    int n;
+    cin >> n;
+    siameseMagicSquare(n);
+
     return 0;
 }
