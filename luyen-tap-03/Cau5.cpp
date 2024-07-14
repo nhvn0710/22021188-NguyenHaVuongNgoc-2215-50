@@ -1,31 +1,49 @@
 #include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-int gcd(int a, int b)
+bool checkSynumber(int i)
 {
-    if (b == 0)
+    string s = "", s0 = to_string(i);
+    int sl = s0.size();
+    for (int i = 0; i < sl; i++)
     {
-        return abs(a);
+        s = s0[i] + s;
     }
-    else
-    {
-        return gcd(b, a % b);
-    }
+    if (s == s0) return true;
+    return false;
 }
 
-int lcm(int a, int b)
+void numofSymnumber(int n)
 {
-    return abs(a * b / gcd(a, b));
+    vector<int> A = {}, B = {}, C = {};
+    for (int i = 0; i < n; i++)
+    {
+        int tmpa, tmpb;
+        cin >> tmpa >> tmpb;
+        A.push_back(tmpa);
+        B.push_back(tmpb);
+        C.push_back(0);
+    }
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = A[i]; j < B[i] + 1; j++)
+        {
+            if (checkSynumber(j)) C[i]++;
+        }
+    }
+    for (int i = 0; i < n; i++)
+    {
+        cout << C[i] << endl;
+    }
 }
 
 int main() {
-    int t, m;
-    cin >> t >> m;
-    if (t == 0 || m == 0) { cout << 0; }
-    else
-    {
-        cout << lcm(t, m);
-    }
+    int n;
+    cin >> n;
+    numofSymnumber(n);
+
     return 0;
 }
