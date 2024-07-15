@@ -28,6 +28,9 @@
     <Font Include="..\resources\font\JosefinSlab-Regular.ttf" />
     <Font Include="..\resources\font\Restore-W00-Heavy.ttf" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Honehoover.rc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
