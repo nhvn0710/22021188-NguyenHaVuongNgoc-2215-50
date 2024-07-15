@@ -19,14 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Honehoover.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="resource.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="..\resources\font\JosefinSlab-Regular.ttf" />
-    <Font Include="..\resources\font\Restore-W00-Heavy.ttf" />
+    <ClCompile Include="Honehoover.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -83,7 +76,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>D:\Paths\vclib\SDL2_ttf-devel-2.22.0-VC\SDL2_ttf-2.22.0\include;D:\Paths\vclib\SDL2-devel-2.30.5-VC\SDL2-2.30.5\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\Paths\vclib\SDL2-devel-2.30.5-VC\SDL2-2.30.5\lib\x64;D:\Paths\vclib\SDL2_ttf-devel-2.22.0-VC\SDL2_ttf-2.22.0\lib\x64;$(LibraryPath)</LibraryPath>
-    <SourcePath>C:\Users\vuong\source\repos\221550\Honehoover\Honehoover\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
