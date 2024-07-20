@@ -1,7 +1,11 @@
+//A build is supposed to be pushed up today but it's bugging fsr Sadge
+
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <cstdio>
 #include <string>
+
+using namespace std;
 
 constexpr int SCREEN_WIDTH = 640;
 constexpr int SCREEN_HEIGHT = 480;
@@ -16,7 +20,7 @@ enum GameState {
 
 struct Button {
     SDL_Rect rect;
-    std::string text;
+    string text;
 };
 
 SDL_Window* window = nullptr;
@@ -28,7 +32,7 @@ Button startButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, 
 Button quitButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "Quit" };
 Button backButton = { {20, 20, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2}, "Back" };
 
-void renderText(const std::string& text, int x, int y, SDL_Color color) {
+void renderText(const string& text, int x, int y, SDL_Color color) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
