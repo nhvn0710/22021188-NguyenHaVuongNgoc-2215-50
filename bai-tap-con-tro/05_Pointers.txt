@@ -1,0 +1,174 @@
+Câu 1:
+
+1. & a
+Hợp lệ : Có
+Giá trị : 0x100
+
+
+2. a
+Hợp lệ : Có
+Giá trị : 0x100 (địa chỉ của phần tử đầu tiên)
+
+
+3. (*a)
+Hợp lệ : Có
+Giá trị : 2
+
+
+4. (**a)
+Hợp lệ : Không
+Lý do  : 'a' là một biến mảng, không phải là con trỏ chỉ tới con trỏ
+
+
+5. & p
+Hợp lệ : Có
+Giá trị : 0x110
+
+
+6. p
+Hợp lệ : Có
+Giá trị : 0x100
+
+
+7. (*p)
+Hợp lệ : Có
+Giá trị : 2
+
+
+8. (**p)
+Hợp lệ : Không
+Lý do  : 'p' là con trỏ, không phải là con trỏ chỉ tới con trỏ
+
+
+9. & (a + 1)
+Hợp lệ : Không
+Lý do  : Không thể lấy địa của của rvalue
+
+
+10. (a + 1)
+Hợp lệ : Có
+Giá trị : 0x104 (địa chỉ của phần tử thứ hai)
+
+
+11. * (a + 1)
+Hợp lệ : Có
+Giá trị : 3
+
+
+12. * *(a + 1)
+Hợp lệ : Không
+Lý do  : (a + 1) không phải là con trỏ chỉ tới con trỏ
+
+
+13. & a[1]
+Hợp lệ : Có
+Giá trị : 0x104
+
+
+14. a[1]
+Hợp lệ : Có
+Giá trị : 3
+
+
+15. * (&a[1])
+Hợp lệ : Có
+Giá trị : 3
+
+
+16. & (p + 2)
+Hợp lệ : Không
+Lý do  : Không thể lấy địa của của rvalue
+
+
+17. (p + 2)
+Hợp lệ : Có
+Giá trị : 0x108
+
+
+18. * (p + 2)
+Hợp lệ : Có
+Giá trị : 0 (giá trị chưa được khởi tạo mặc định)
+
+
+19. * *(p + 2)
+Hợp lệ : Có
+Giá trị : Không xác định (Truy cập bộ nhớ không hợp lệ)
+
+
+20. & p[2]
+Hợp lệ : Có
+Giá trị : 0x108
+
+
+21. p[2]
+Hợp lệ : Có
+Giá trị : 0 (giá trị chưa được khởi tạo mặc định
+
+
+22. * (&p[2])
+Hợp lệ : Có
+Giá trị : 0 (giá trị chưa được khởi tạo mặc định
+
+
+23. * (&p[0]) + *(a + 1)
+Hợp lệ : Có
+Giá trị : 5 (2 + 3)
+
+
+24. & pp
+Hợp lệ : Có
+Giá trị : 0x114
+
+
+25. pp
+Hợp lệ : Có
+Giá trị : 0x110
+
+
+26. (*pp)
+Hợp lệ : Có
+Giá trị : 0x100
+
+
+27. (**pp)
+Hợp lệ : Có
+Giá trị : 2
+
+
+28. (pp + 1)
+Hợp lệ : Có
+Giá trị : 0x118
+
+
+29. * pp + 1
+Hợp lệ : Có
+Giá trị : 0x104
+
+
+30. * (pp + 1)
+Hợp lệ : Có
+Giá trị : Không xác định (Truy cập bộ nhớ không hợp lệ)
+
+
+31. * (*pp + 1)
+Hợp lệ : Có
+Giá trị : 3
+
+
+32. * (pp + 1) + *(p + 2)
+Hợp lệ : Có
+Giá trị : Không xác định (Cả hai đều truy cập bộ nhớ không hợp lệ)
+
+
+33. * pp + *(p + 2)
+Hợp lệ : Có
+Giá trị : 0x100 + 0 = 0x100
+
+
+
+Câu 2 :
+
+a[2] = 10
+<=> *(a+2) = 10
+<=> *(p+2) = 10
+<=> *(*pp+2) = 10
