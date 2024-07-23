@@ -12,6 +12,7 @@ public:
     ~Game();
     bool initialize();
     void run();
+    void resetGame();
 
 private:
     enum class GameState {
@@ -39,6 +40,7 @@ private:
     void renderMainMenu();
     void renderGameScreen();
     void renderGameOverScreen();
+    void renderWinScreen();
 
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -53,6 +55,7 @@ private:
 
     bool gameWon;
     int elapsedSeconds;
+    int finalTime;
     int remainingFlags;
     Timer gameTimer;
 
