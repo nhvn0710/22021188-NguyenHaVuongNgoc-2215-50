@@ -74,8 +74,7 @@ void Game::handleEvents() {
             switch (currentState) {
             case GameState::MAIN_MENU:
                 if (isMouseOverButton(startButton, mouseX, mouseY)) {
-                    currentState = GameState::PLAYING;
-                    board.reset();
+                    resetGame();
                 }
                 else if (isMouseOverButton(quitButton, mouseX, mouseY)) {
                     currentState = GameState::QUIT;
@@ -92,6 +91,8 @@ void Game::handleEvents() {
                         if (board.revealCell(cellX, cellY)) {
                             if (board.isGameOver()) {
                                 currentState = GameState::GAME_OVER;
+                                gameWon = false;
+                                board.revealAllMines();
                             }
                         }
                     }
@@ -102,8 +103,7 @@ void Game::handleEvents() {
                 break;
             case GameState::GAME_OVER:
                 if (isMouseOverButton(newGameButton, mouseX, mouseY)) {
-                    currentState = GameState::PLAYING;
-                    board.reset();
+                    resetGame();
                 }
                 else if (isMouseOverButton(backButton, mouseX, mouseY)) {
                     currentState = GameState::MAIN_MENU;
@@ -120,6 +120,8 @@ void Game::update() {
         if (board.isGameWon()) {
             currentState = GameState::GAME_OVER;
             gameWon = true;
+            gameTimer.stop();
+            finalTime = elapsedSeconds;  // Store the final time
         }
 
         // Check for lose condition
@@ -127,13 +129,14 @@ void Game::update() {
             currentState = GameState::GAME_OVER;
             gameWon = false;
             board.revealAllMines();
+            gameTimer.stop();
         }
 
         // Update game timer
         if (!gameTimer.isStarted()) {
             gameTimer.start();
         }
-        elapsedSeconds = gameTimer.getElapsedTime() / 1000;  // Convert to seconds
+        elapsedSeconds = gameTimer.getElapsedTime() / 1000;
 
         // Update flag count
         remainingFlags = board.getMineCount() - board.getFlagCount();
@@ -152,7 +155,12 @@ void Game::render() {
         renderGameScreen();
         break;
     case GameState::GAME_OVER:
-        renderGameOverScreen();
+        if (gameWon) {
+            renderWinScreen();
+        }
+        else {
+            renderGameOverScreen();
+        }
         break;
     }
 
@@ -200,6 +208,13 @@ void Game::renderMainMenu() {
 void Game::renderGameScreen() {
     board.render(renderer, font, SCREEN_WIDTH, SCREEN_HEIGHT);
     renderButton(backButton);
+
+    SDL_Color textColor = { 0, 0, 0, 255 };
+    string timeText = "Time: " + to_string(elapsedSeconds) + " s";
+    renderText(timeText, 10, SCREEN_HEIGHT - 30, textColor);
+
+    string flagText = "Flags: " + to_string(remainingFlags);
+    renderText(flagText, SCREEN_WIDTH - 120, SCREEN_HEIGHT - 30, textColor);
 }
 
 void Game::renderGameOverScreen() {
@@ -208,8 +223,34 @@ void Game::renderGameOverScreen() {
 
     SDL_Color textColor = { 0, 0, 0, 255 };
     renderText("Game Over!", SCREEN_WIDTH / 2 - 100, 100, textColor);
+    renderText("You Lost!", SCREEN_WIDTH / 2 - 80, 150, textColor);
     renderButton(newGameButton);
     renderButton(backButton);
+}
+
+void Game::renderWinScreen() {
+    SDL_SetRenderDrawColor(renderer, 200, 255, 200, 255);
+    SDL_RenderClear(renderer);
+
+    SDL_Color textColor = { 0, 0, 0, 255 };
+    renderText("Congratulations!", SCREEN_WIDTH / 2 - 120, 100, textColor);
+    renderText("You Won!", SCREEN_WIDTH / 2 - 70, 150, textColor);
+
+    string timeText = "Time: " + to_string(finalTime) + " seconds";
+    renderText(timeText, SCREEN_WIDTH / 2 - 100, 200, textColor);
+
+    renderButton(newGameButton);
+    renderButton(backButton);
+}
+
+void Game::resetGame() {
+    board.reset();
+    gameWon = false;
+    elapsedSeconds = 0;
+    finalTime = 0;
+    remainingFlags = board.getMineCount();
+    gameTimer.stop();
+    currentState = GameState::PLAYING;
 }
 
 void Game::cleanUp() {
