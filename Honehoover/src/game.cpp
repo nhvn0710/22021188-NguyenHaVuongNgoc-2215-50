@@ -32,7 +32,7 @@ bool Game::initSDL() {
         return false;
     }
 
-    window = SDL_CreateWindow("Minesweeper", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Honehoover", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == nullptr) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return false;
@@ -121,7 +121,7 @@ void Game::update() {
             currentState = GameState::GAME_OVER;
             gameWon = true;
             gameTimer.stop();
-            finalTime = elapsedSeconds;  // Store the final time
+            finalTime = elapsedSeconds;
         }
 
         // Check for lose condition
@@ -202,7 +202,7 @@ void Game::renderMainMenu() {
     renderButton(quitButton);
 
     SDL_Color titleColor = { 0, 0, 0, 255 };
-    renderText("Minesweeper", SCREEN_WIDTH / 2 - 100, 100, titleColor);
+    renderText("Honehoover", SCREEN_WIDTH / 2 - 100, 100, titleColor);
 }
 
 void Game::renderGameScreen() {
