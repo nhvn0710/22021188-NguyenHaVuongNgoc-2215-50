@@ -3,11 +3,16 @@
 
 using namespace std;
 
-Game::Game() : gameWon(false), elapsedSeconds(0), remainingFlags(0), window(nullptr), renderer(nullptr), font(nullptr), currentState(GameState::MAIN_MENU), board(10, 10, 10) {
-    startButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game" };
-    quitButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "Quit" };
-    backButton = { {20, 20, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2}, "Back" };
-    newGameButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "New Game" };
+Game::Game() : gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0), window(nullptr), renderer(nullptr),
+               font(nullptr), currentState(GameState::MAIN_MENU), board(10, 10, 10), currentDifficulty()
+{
+	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
+	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "Quit"};
+	backButton = {{20, 20, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2}, "Back"};
+	newGameButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "New Game"};
+	easyButton = {{20, 150, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Easy"};
+	mediumButton = {{20, 200, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Medium"};
+	hardButton = {{20, 250, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Hard"};
 }
 
 Game::~Game() {
@@ -61,6 +66,22 @@ void Game::run() {
     }
 }
 
+void Game::setDifficulty(DifficultyLevel level) {
+    switch (level) {
+    case DifficultyLevel::EASY:
+        board = Board(8, 8, 10);
+        break;
+    case DifficultyLevel::MEDIUM:
+        board = Board(16, 16, 40);
+        break;
+    case DifficultyLevel::HARD:
+        board = Board(24, 24, 99);
+        break;
+    }
+    currentDifficulty = level;
+    resetGame();
+}
+
 void Game::handleEvents() {
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
@@ -73,6 +94,15 @@ void Game::handleEvents() {
 
             switch (currentState) {
             case GameState::MAIN_MENU:
+                if (isMouseOverButton(easyButton, mouseX, mouseY)) {
+                    setDifficulty(DifficultyLevel::EASY);
+                }
+                else if (isMouseOverButton(mediumButton, mouseX, mouseY)) {
+                    setDifficulty(DifficultyLevel::MEDIUM);
+                }
+                else if (isMouseOverButton(hardButton, mouseX, mouseY)) {
+                    setDifficulty(DifficultyLevel::HARD);
+                }
                 if (isMouseOverButton(startButton, mouseX, mouseY)) {
                     resetGame();
                 }
@@ -181,6 +211,19 @@ void Game::renderText(const string& text, int x, int y, SDL_Color color) {
     SDL_DestroyTexture(texture);
 }
 
+void Game::renderCenteredText(const string& text, int y, SDL_Color color) {
+    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    int textWidth = surface->w;
+    int textHeight = surface->h;
+    SDL_Rect textRect = { (SCREEN_WIDTH - textWidth) / 2, y, textWidth, textHeight };
+
+    SDL_FreeSurface(surface);
+    SDL_RenderCopy(renderer, texture, nullptr, &textRect);
+    SDL_DestroyTexture(texture);
+}
+
 void Game::renderButton(const Button& button) {
     SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
     SDL_RenderFillRect(renderer, &button.rect);
@@ -200,6 +243,9 @@ void Game::renderMainMenu() {
 
     renderButton(startButton);
     renderButton(quitButton);
+    renderButton(easyButton);
+    renderButton(mediumButton);
+    renderButton(hardButton);
 
     SDL_Color titleColor = { 0, 0, 0, 255 };
     renderText("Honehoover", SCREEN_WIDTH / 2 - 100, 100, titleColor);
@@ -233,14 +279,14 @@ void Game::renderWinScreen() {
     SDL_RenderClear(renderer);
 
     SDL_Color textColor = { 0, 0, 0, 255 };
-    renderText("Congratulations!", SCREEN_WIDTH / 2 - 120, 100, textColor);
-    renderText("You Won!", SCREEN_WIDTH / 2 - 70, 150, textColor);
 
     string timeText = "Time: " + to_string(finalTime) + " seconds";
     renderText(timeText, SCREEN_WIDTH / 2 - 100, 200, textColor);
 
     renderButton(newGameButton);
     renderButton(backButton);
+    string victoryMessage = "You cleared all mines! Well done!";
+    renderCenteredText(victoryMessage, SCREEN_HEIGHT / 2 + 50, textColor);
 }
 
 void Game::resetGame() {

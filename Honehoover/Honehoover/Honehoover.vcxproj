@@ -28,7 +28,6 @@
   <ItemGroup>
     <ClCompile Include="..\src\board.cpp" />
     <ClCompile Include="..\src\cell.cpp" />
-    <ClCompile Include="..\src\Export.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
