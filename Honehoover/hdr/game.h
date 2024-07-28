@@ -27,6 +27,19 @@ private:
         string text;
     };
 
+    struct Difficulty {
+        const int width;
+        const int height;
+        const int mineCount;
+    };
+
+    enum class DifficultyLevel {
+        EASY,
+        MEDIUM,
+        HARD
+    };
+
+
     bool initSDL();
     void handleEvents();
     void update();
@@ -34,8 +47,10 @@ private:
     void cleanUp();
 
     void renderText(const string& text, int x, int y, SDL_Color color);
+    void renderCenteredText(const string& text, int y, SDL_Color color);
     void renderButton(const Button& button);
     bool isMouseOverButton(const Button& button, int mouseX, int mouseY);
+    void setDifficulty(DifficultyLevel level);
 
     void renderMainMenu();
     void renderGameScreen();
@@ -52,6 +67,11 @@ private:
     Button quitButton;
     Button backButton;
     Button newGameButton;
+    Button easyButton;
+    Button mediumButton;
+    Button hardButton;
+
+    DifficultyLevel currentDifficulty;
 
     bool gameWon;
     int elapsedSeconds;
@@ -63,4 +83,6 @@ private:
     static const int SCREEN_HEIGHT = 480;
     static const int BUTTON_WIDTH = 200;
     static const int BUTTON_HEIGHT = 50;
+    static const Difficulty difficulties[3];
+
 };
