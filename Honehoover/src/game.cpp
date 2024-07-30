@@ -55,6 +55,13 @@ bool Game::initSDL() {
         return false;
     }
 
+    if (window == nullptr || renderer == nullptr || font == nullptr) {
+        printf("Failed to load SDL components: %s\n", SDL_GetError());
+        TTF_Quit();
+        SDL_Quit();
+        exit(1);
+    }
+
     return true;
 }
 

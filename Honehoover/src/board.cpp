@@ -1,6 +1,7 @@
 #include "Board.h"
 #include <random>
 #include <algorithm>
+#include <chrono>
 #include <numeric>
 #include <SDL_ttf.h>
 #include <string>
@@ -29,10 +30,17 @@ void Board::placeMines() {
     iota(positions.begin(), positions.end(), 0);
     random_device rd;
     mt19937 g(rd());
-    shuffle(positions.begin(), positions.end(), g);
+    g.seed(chrono::steady_clock::now().time_since_epoch().count());
+    vector<int> innerPositions;
+    copy_if(positions.begin(), positions.end(), back_inserter(innerPositions), [this](int i) {
+        int x = i % width, y = i / width;
+        // Exclude the edges
+        return x > 0 && x < width - 1 && y > 0 && y < height - 1;
+        });
 
+    shuffle(innerPositions.begin(), innerPositions.end(), g);
     for (int i = 0; i < mineCount; ++i) {
-        int pos = positions[i];
+        int pos = innerPositions[i];
         int x = pos % width;
         int y = pos / width;
         cells[y][x].setMine(true);
