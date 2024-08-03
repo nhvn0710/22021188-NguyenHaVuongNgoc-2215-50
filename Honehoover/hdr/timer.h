@@ -3,10 +3,6 @@
 using namespace std;
 
 class Timer {
-private:
-    Uint32 startTicks;
-    bool started;
-
 public:
     Timer() : startTicks(0), started(false) {}
 
@@ -14,20 +10,11 @@ public:
         started = true;
         startTicks = SDL_GetTicks();
     }
+    void stop();
+    Uint32 getElapsedTime() const;
+    bool isStarted() const { return started; }
 
-    void stop() {
-        started = false;
-        startTicks = 0;
-    }
-
-    Uint32 getElapsedTime() {
-        if (started) {
-            return SDL_GetTicks() - startTicks;
-        }
-        return 0;
-    }
-
-    bool isStarted() const {
-        return started;
-    }
+private:
+    Uint32 startTicks;
+    bool started;
 };

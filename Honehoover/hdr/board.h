@@ -4,7 +4,7 @@
 
 #include "cell.h"
 
-using namespace std;
+#pragma once
 
 class Board {
 public:
