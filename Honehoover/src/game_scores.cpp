@@ -32,8 +32,8 @@ void Game::updateHighScores() {
         sort(highScores.begin(), highScores.end(), compareHighScores);
 
         // Trim list to top 5
-        if (highScores.size() > 5) {
-            highScores.resize(5);
+        if (highScores.size() > 15) {
+            highScores.resize(15);
         }
 
         saveHighScores();

@@ -19,6 +19,7 @@ private:
         MAIN_MENU,
         PLAYING,
         GAME_OVER,
+        VIEW_HIGH_SCORES,
         QUIT
     };
 
@@ -43,9 +44,7 @@ private:
         int time;
         DifficultyLevel difficulty;
     };
-
-
-
+    
     bool initSDL();
     void handleEvents();
     void update();
@@ -62,6 +61,7 @@ private:
     void renderGameScreen();
     void renderGameOverScreen();
     void renderWinScreen();
+    void renderHighScoreScreen();
 
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -76,6 +76,7 @@ private:
     Button easyButton;
     Button mediumButton;
     Button hardButton;
+    Button highScoresButton;
 
     DifficultyLevel currentDifficulty;
 
@@ -93,7 +94,7 @@ private:
     static bool compareHighScores(const HighScore& a, const HighScore& b);
 
     static const int SCREEN_WIDTH = 960;
-    static const int SCREEN_HEIGHT = 960;
+    static const int SCREEN_HEIGHT = 720;
     static const int BUTTON_WIDTH = 200;
     static const int BUTTON_HEIGHT = 50;
     static const Difficulty difficulties[3];

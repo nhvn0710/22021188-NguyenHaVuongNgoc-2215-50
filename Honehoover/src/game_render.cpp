@@ -11,6 +11,9 @@ void Game::render() {
     case GameState::PLAYING:
         renderGameScreen();
         break;
+    case GameState::VIEW_HIGH_SCORES:
+        renderHighScoreScreen();
+        break;
     case GameState::GAME_OVER:
         if (gameWon) {
             renderWinScreen();
@@ -77,7 +80,7 @@ void Game::renderMainMenu() {
     SDL_Color titleColor = { 0, 0, 0, 255 };
     renderText("Honehoover", SCREEN_WIDTH / 2 - 100, 100, titleColor);
 
-    displayHighScores();
+    renderButton(highScoresButton);
 }
 
 void Game::renderGameScreen() {
@@ -118,3 +121,19 @@ void Game::renderWinScreen() {
     renderCenteredText(victoryMessage, SCREEN_HEIGHT / 2 + 50, textColor);
     displayHighScores();
 }
+
+void Game::renderHighScoreScreen() {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
+    SDL_RenderClear(renderer);
+
+    SDL_Color titleColor = { 255, 255, 255, 255 }; 
+    renderCenteredText("High Scores", 50, titleColor);
+
+
+    displayHighScores();
+
+    renderButton(backButton);
+
+    SDL_RenderPresent(renderer);
+}
+

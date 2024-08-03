@@ -9,12 +9,13 @@ Game::Game() : gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0
 {
     loadHighScores();
 	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
-	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "Quit"};
+	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "Quit"};
 	backButton = {{20, 20, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2}, "Back"};
 	newGameButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "New Game"};
 	easyButton = {{20, 150, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Easy"};
 	mediumButton = {{20, 200, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Medium"};
 	hardButton = {{20, 250, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Hard"};
+    highScoresButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT},"High Scores"};
 }
 
 Game::~Game() {
@@ -78,13 +79,13 @@ void Game::run() {
 void Game::setDifficulty(DifficultyLevel level) {
     switch (level) {
     case DifficultyLevel::EASY:
-        board = Board(12, 12, 12);
+        board = Board(12, 9, 12);
         break;
     case DifficultyLevel::MEDIUM:
-        board = Board(16, 16, 30);
+        board = Board(20, 15, 30);
         break;
     case DifficultyLevel::HARD:
-        board = Board(24, 24, 120);
+        board = Board(30, 24, 120);
         break;
     }
     currentDifficulty = level;
@@ -115,8 +116,17 @@ void Game::handleEvents() {
                 if (isMouseOverButton(startButton, mouseX, mouseY)) {
                     resetGame();
                 }
+                if (isMouseOverButton(highScoresButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
+                    currentState = GameState::VIEW_HIGH_SCORES;
+                }
                 else if (isMouseOverButton(quitButton, mouseX, mouseY)) {
                     currentState = GameState::QUIT;
+                }
+                break;
+            case GameState::VIEW_HIGH_SCORES: {
+                    if (isMouseOverButton(backButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
+                        currentState = GameState::MAIN_MENU;
+                    }
                 }
                 break;
             case GameState::PLAYING:
