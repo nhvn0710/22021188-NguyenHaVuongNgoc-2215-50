@@ -19,10 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\resources\font\JosefinSlab-Regular.ttf" />
-    <Font Include="..\resources\font\Restore-W00-Heavy.ttf" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="Honehoover.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -38,6 +34,11 @@
     <ClInclude Include="..\hdr\game.h" />
     <ClInclude Include="..\hdr\resource.h" />
     <ClInclude Include="..\hdr\timer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\resources\font\JosefinSlab-Regular.ttf" />
+    <Font Include="..\resources\font\QX_LatypeSans.ttf" />
+    <Font Include="..\resources\font\Restore-W00-Heavy.ttf" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

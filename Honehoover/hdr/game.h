@@ -23,7 +23,7 @@ private:
     };
 
     struct Button {
-        SDL_Rect rect;
+        SDL_Rect rect{ 0, 0, 0, 0 };
         string text;
     };
 
@@ -38,6 +38,12 @@ private:
         MEDIUM,
         HARD
     };
+
+    struct HighScore {
+        int time;
+        DifficultyLevel difficulty;
+    };
+
 
 
     bool initSDL();
@@ -78,6 +84,13 @@ private:
     int finalTime;
     int remainingFlags;
     Timer gameTimer;
+
+    vector<HighScore> highScores;
+    void loadHighScores();
+    void updateHighScores();
+    void saveHighScores() const;
+    void displayHighScores();
+    static bool compareHighScores(const HighScore& a, const HighScore& b);
 
     static const int SCREEN_WIDTH = 640;
     static const int SCREEN_HEIGHT = 480;

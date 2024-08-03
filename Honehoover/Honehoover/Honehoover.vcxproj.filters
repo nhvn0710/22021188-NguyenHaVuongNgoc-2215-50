@@ -15,14 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\resources\font\JosefinSlab-Regular.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
-    <Font Include="..\resources\font\Restore-W00-Heavy.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="Honehoover.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
@@ -60,5 +52,16 @@
     <ClInclude Include="..\hdr\timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\resources\font\JosefinSlab-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="..\resources\font\QX_LatypeSans.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="..\resources\font\Restore-W00-Heavy.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
   </ItemGroup>
 </Project>

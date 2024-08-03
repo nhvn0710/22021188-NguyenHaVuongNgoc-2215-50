@@ -1,11 +1,16 @@
 #include "game.h"
+
+#include <algorithm>
 #include <cstdio>
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 
 Game::Game() : gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0), window(nullptr), renderer(nullptr),
                font(nullptr), currentState(GameState::MAIN_MENU), board(10, 10, 10), currentDifficulty()
 {
+    loadHighScores();
 	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
 	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "Quit"};
 	backButton = {{20, 20, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2}, "Back"};
@@ -76,13 +81,13 @@ void Game::run() {
 void Game::setDifficulty(DifficultyLevel level) {
     switch (level) {
     case DifficultyLevel::EASY:
-        board = Board(8, 8, 10);
+        board = Board(8, 8, 5);
         break;
     case DifficultyLevel::MEDIUM:
-        board = Board(16, 16, 40);
+        board = Board(16, 16, 15);
         break;
     case DifficultyLevel::HARD:
-        board = Board(24, 24, 99);
+        board = Board(24, 24, 40);
         break;
     }
     currentDifficulty = level;
@@ -159,6 +164,7 @@ void Game::update() {
             gameWon = true;
             gameTimer.stop();
             finalTime = elapsedSeconds;
+            updateHighScores();
         }
 
         // Check for lose condition
@@ -256,6 +262,8 @@ void Game::renderMainMenu() {
 
     SDL_Color titleColor = { 0, 0, 0, 255 };
     renderText("Honehoover", SCREEN_WIDTH / 2 - 100, 100, titleColor);
+
+    displayHighScores();
 }
 
 void Game::renderGameScreen() {
@@ -294,7 +302,91 @@ void Game::renderWinScreen() {
     renderButton(backButton);
     string victoryMessage = "You cleared all mines! Well done!";
     renderCenteredText(victoryMessage, SCREEN_HEIGHT / 2 + 50, textColor);
+    displayHighScores();
 }
+
+void Game::loadHighScores() {
+    ifstream inFile("highscores.txt");
+    highScores.clear();
+
+    int time;
+    string difficulty;
+    while (inFile >> time >> difficulty) {
+        DifficultyLevel difficultyLevel = DifficultyLevel::EASY;
+        if (difficulty == "Easy") difficultyLevel = DifficultyLevel::EASY;
+        else if (difficulty == "Medium") difficultyLevel = DifficultyLevel::MEDIUM;
+        else if (difficulty == "Hard") difficultyLevel = DifficultyLevel::HARD;
+
+        highScores.push_back({ time, difficultyLevel });
+    }
+
+    sort(highScores.begin(), highScores.end(), compareHighScores);
+}
+
+void Game::updateHighScores() {
+    if (gameWon) {
+        HighScore newScore{};
+        newScore.time = finalTime;
+        newScore.difficulty = currentDifficulty;
+
+        highScores.push_back(newScore);
+        sort(highScores.begin(), highScores.end(), compareHighScores);
+        cout << "added" << endl;
+
+        // Trim list to top 5
+        if (highScores.size() > 5) {
+            highScores.resize(5);
+        }
+
+        saveHighScores();
+    }
+}
+
+void Game::saveHighScores() const {
+    ofstream outFile("highscores.txt");
+    if (outFile) {
+        for (const auto& score : highScores) {
+            string difficultyName;
+            switch (score.difficulty) {
+            case DifficultyLevel::EASY:
+                difficultyName = "Easy";
+                break;
+            case DifficultyLevel::MEDIUM:
+                difficultyName = "Medium";
+                break;
+            case DifficultyLevel::HARD:
+                difficultyName = "Hard";
+                break;
+            }
+            outFile << to_string(score.time) << " " << difficultyName << "\n";
+        }
+    }
+}
+
+
+bool Game::compareHighScores(const HighScore& a, const HighScore& b) {
+    int weightA = a.difficulty == DifficultyLevel::HARD ? 3 : a.difficulty == DifficultyLevel::MEDIUM ? 2 : 1;
+    int weightB = b.difficulty == DifficultyLevel::HARD ? 3 : b.difficulty == DifficultyLevel::MEDIUM ? 2 : 1;
+
+    return a.time * weightA < b.time * weightB;
+}
+
+void Game::displayHighScores() {
+    SDL_Color color = { 255, 255, 0, 255 }; 
+    int yPosition = 100; 
+    renderCenteredText("High Scores:", yPosition, color);
+    yPosition += 30; 
+
+    for (const auto& score : highScores) {
+        string difficultyName = (score.difficulty == DifficultyLevel::EASY ? "Easy" :
+            score.difficulty == DifficultyLevel::MEDIUM ? "Medium" :
+            score.difficulty == DifficultyLevel::HARD ? "Hard" : "Unknown");
+        string text = difficultyName + " - " + to_string(score.time) + "s";
+        renderCenteredText(text, yPosition, color);
+        yPosition += 30;
+    }
+}
+
 
 void Game::resetGame() {
     board.reset();
