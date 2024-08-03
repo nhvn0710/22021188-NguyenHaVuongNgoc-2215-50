@@ -92,8 +92,8 @@ private:
     void displayHighScores();
     static bool compareHighScores(const HighScore& a, const HighScore& b);
 
-    static const int SCREEN_WIDTH = 640;
-    static const int SCREEN_HEIGHT = 480;
+    static const int SCREEN_WIDTH = 960;
+    static const int SCREEN_HEIGHT = 960;
     static const int BUTTON_WIDTH = 200;
     static const int BUTTON_HEIGHT = 50;
     static const Difficulty difficulties[3];

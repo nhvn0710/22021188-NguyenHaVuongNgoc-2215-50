@@ -63,8 +63,8 @@ void Game::saveHighScores() const {
 
 
 bool Game::compareHighScores(const HighScore& a, const HighScore& b) {
-    int weightA = a.difficulty == DifficultyLevel::HARD ? 3 : a.difficulty == DifficultyLevel::MEDIUM ? 2 : 1;
-    int weightB = b.difficulty == DifficultyLevel::HARD ? 3 : b.difficulty == DifficultyLevel::MEDIUM ? 2 : 1;
+    int weightA = a.difficulty == DifficultyLevel::HARD ? 1 : a.difficulty == DifficultyLevel::MEDIUM ? 6 : 24;
+    int weightB = b.difficulty == DifficultyLevel::HARD ? 1 : b.difficulty == DifficultyLevel::MEDIUM ? 6 : 24;
 
     return a.time * weightA < b.time * weightB;
 }

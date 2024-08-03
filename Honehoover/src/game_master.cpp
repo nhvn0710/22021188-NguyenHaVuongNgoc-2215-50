@@ -78,13 +78,13 @@ void Game::run() {
 void Game::setDifficulty(DifficultyLevel level) {
     switch (level) {
     case DifficultyLevel::EASY:
-        board = Board(8, 8, 5);
+        board = Board(12, 12, 12);
         break;
     case DifficultyLevel::MEDIUM:
-        board = Board(16, 16, 15);
+        board = Board(16, 16, 30);
         break;
     case DifficultyLevel::HARD:
-        board = Board(24, 24, 40);
+        board = Board(24, 24, 120);
         break;
     }
     currentDifficulty = level;
