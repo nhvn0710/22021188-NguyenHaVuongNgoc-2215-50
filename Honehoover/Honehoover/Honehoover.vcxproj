@@ -24,9 +24,11 @@
   <ItemGroup>
     <ClCompile Include="..\src\board.cpp" />
     <ClCompile Include="..\src\cell.cpp" />
-    <ClCompile Include="..\src\game.cpp" />
+    <ClCompile Include="..\src\game_master.cpp" />
+    <ClCompile Include="..\src\game_render.cpp" />
+    <ClCompile Include="..\src\game_scores.cpp" />
     <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="timer.cpp" />
+    <ClCompile Include="..\src\timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\hdr\board.h" />

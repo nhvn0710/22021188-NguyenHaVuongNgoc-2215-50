@@ -29,10 +29,16 @@
     <ClCompile Include="..\src\cell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\game.cpp">
+    <ClCompile Include="..\src\game_master.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="timer.cpp">
+    <ClCompile Include="..\src\timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game_render.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game_scores.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
