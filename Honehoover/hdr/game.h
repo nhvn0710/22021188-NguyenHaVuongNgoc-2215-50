@@ -56,6 +56,7 @@ private:
     void renderButton(const Button& button);
     bool isMouseOverButton(const Button& button, int mouseX, int mouseY);
     void setDifficulty(DifficultyLevel level);
+    string difficultyToString(DifficultyLevel level);
 
     void renderMainMenu();
     void renderGameScreen();
@@ -89,7 +90,7 @@ private:
     vector<HighScore> highScores;
     void loadHighScores();
     void updateHighScores();
-    void saveHighScores() const;
+    void saveHighScores();
     void displayHighScores();
     static bool compareHighScores(const HighScore& a, const HighScore& b);
 

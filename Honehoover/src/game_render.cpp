@@ -79,9 +79,12 @@ void Game::renderMainMenu() {
 
     SDL_Color titleColor = { 0, 0, 0, 255 };
     renderText("Honehoover", SCREEN_WIDTH / 2 - 100, 100, titleColor);
-
     renderButton(highScoresButton);
+    SDL_Color difficultyColor = { 0, 0, 0, 255 };
+    string difficultyText = "Difficulty: " + difficultyToString(currentDifficulty);
+    renderCenteredText(difficultyText, startButton.rect.y - 50, difficultyColor);
 }
+
 
 void Game::renderGameScreen() {
     board.render(renderer, font, SCREEN_WIDTH, SCREEN_HEIGHT);

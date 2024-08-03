@@ -40,23 +40,11 @@ void Game::updateHighScores() {
     }
 }
 
-void Game::saveHighScores() const {
+void Game::saveHighScores() {
     ofstream outFile("highscores.txt");
     if (outFile) {
         for (const auto& score : highScores) {
-            string difficultyName;
-            switch (score.difficulty) {
-            case DifficultyLevel::EASY:
-                difficultyName = "Easy";
-                break;
-            case DifficultyLevel::MEDIUM:
-                difficultyName = "Medium";
-                break;
-            case DifficultyLevel::HARD:
-                difficultyName = "Hard";
-                break;
-            }
-            outFile << to_string(score.time) << " " << difficultyName << "\n";
+            outFile << to_string(score.time) << " " << difficultyToString(score.difficulty) << "\n";
         }
     }
 }

@@ -89,7 +89,19 @@ void Game::setDifficulty(DifficultyLevel level) {
         break;
     }
     currentDifficulty = level;
-    resetGame();
+}
+
+string Game::difficultyToString(DifficultyLevel level) {
+    switch (level) {
+    case DifficultyLevel::EASY:
+        return "Easy";
+    case DifficultyLevel::MEDIUM:
+        return "Medium";
+    case DifficultyLevel::HARD:
+        return "Hard";
+    default:
+        return "Unknown Difficulty";
+    }
 }
 
 void Game::handleEvents() {
@@ -113,10 +125,10 @@ void Game::handleEvents() {
                 else if (isMouseOverButton(hardButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::HARD);
                 }
-                if (isMouseOverButton(startButton, mouseX, mouseY)) {
-                    resetGame();
+                else if (isMouseOverButton(startButton, mouseX, mouseY)) {
+                    currentState = GameState::PLAYING; // Change to PLAYING state but don't reset
                 }
-                if (isMouseOverButton(highScoresButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
+                else if (isMouseOverButton(highScoresButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
                     currentState = GameState::VIEW_HIGH_SCORES;
                 }
                 else if (isMouseOverButton(quitButton, mouseX, mouseY)) {
