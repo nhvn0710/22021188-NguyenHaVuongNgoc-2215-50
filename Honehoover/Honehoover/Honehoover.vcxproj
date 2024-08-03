@@ -30,6 +30,7 @@
     <ClCompile Include="..\src\cell.cpp" />
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\hdr\board.h" />
