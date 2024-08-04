@@ -29,15 +29,20 @@ private:
     };
 
     struct Difficulty {
-        const int width;
-        const int height;
-        const int mineCount;
+        int width;
+        int height;
+        int mineCount;
+        bool isCustom;
+        bool operator==(const Difficulty& other) const {
+            return width == other.width && height == other.height && mineCount == other.mineCount;
+        }
     };
 
     enum class DifficultyLevel {
         EASY,
         MEDIUM,
-        HARD
+        HARD,
+        CUSTOM
     };
 
     struct HighScore {
@@ -46,6 +51,10 @@ private:
     };
     
     bool initSDL();
+    void setCustomDifficulty(int);
+    int getDifficultySliderValue(DifficultyLevel);
+    bool isCloseToDefaultDifficulty(int);
+    DifficultyLevel getCurrentDifficulty(int);
     void handleEvents();
     void update();
     void render();
@@ -54,6 +63,8 @@ private:
     void renderText(const string& text, int x, int y, SDL_Color color);
     void renderCenteredText(const string& text, int y, SDL_Color color);
     void renderButton(const Button& button);
+    int getSliderPosition(int value);
+    void renderSlider();
     bool isMouseOverButton(const Button& button, int mouseX, int mouseY);
     void setDifficulty(DifficultyLevel level);
     string difficultyToString(DifficultyLevel level);
@@ -80,6 +91,8 @@ private:
     Button highScoresButton;
 
     DifficultyLevel currentDifficulty;
+    Difficulty customDifficulty;
+    int sliderValue;
 
     bool gameWon;
     int elapsedSeconds;

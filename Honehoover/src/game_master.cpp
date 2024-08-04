@@ -1,6 +1,7 @@
 #include "game.h"
 
 #include <cstdio>
+#include <iostream>
 
 using namespace std;
 
@@ -76,19 +77,48 @@ void Game::run() {
     }
 }
 
+const Game::Difficulty Game::difficulties[] = {
+    { 12, 9, 4 },
+    { 20, 15, 20 }, 
+    { 30, 24, 184 }
+};
+
 void Game::setDifficulty(DifficultyLevel level) {
     switch (level) {
     case DifficultyLevel::EASY:
-        board = Board(12, 9, 12);
+        board = Board(12, 9, 4);
         break;
     case DifficultyLevel::MEDIUM:
-        board = Board(20, 15, 30);
+        board = Board(20, 15, 20);
         break;
     case DifficultyLevel::HARD:
-        board = Board(30, 24, 120);
+        board = Board(30, 24, 184);
         break;
+    case DifficultyLevel::CUSTOM:
+            board = Board(customDifficulty.width, customDifficulty.height, customDifficulty.mineCount);
+            if (customDifficulty == difficulties[0]) { //0
+                currentDifficulty = DifficultyLevel::EASY;
+            }
+            else if (customDifficulty == difficulties[1]) { //32
+                currentDifficulty = DifficultyLevel::MEDIUM;
+            }
+            else if (customDifficulty == difficulties[2]) { //72
+                currentDifficulty = DifficultyLevel::HARD;
+            }
+            else {
+                currentDifficulty = DifficultyLevel::CUSTOM;
+            }
+            break;
     }
     currentDifficulty = level;
+}
+
+void Game::setCustomDifficulty(int sliderVal)
+{
+    int width = 12 + sliderVal * 5 / 20;
+    int height = 9 + sliderVal * 5 / 24;
+    int mineCount = 4 + sliderVal * (0.5 + (sliderVal * sliderVal) / 2000);
+    customDifficulty = { width, height, mineCount, true };
 }
 
 string Game::difficultyToString(DifficultyLevel level) {
@@ -99,10 +129,46 @@ string Game::difficultyToString(DifficultyLevel level) {
         return "Medium";
     case DifficultyLevel::HARD:
         return "Hard";
+    case DifficultyLevel::CUSTOM:
+        return "Custom";
     default:
         return "Unknown Difficulty";
     }
 }
+
+int Game::getDifficultySliderValue(DifficultyLevel level) {
+    switch (level) {
+    case DifficultyLevel::EASY:
+        return 0; 
+    case DifficultyLevel::MEDIUM:
+        return 32;
+    case DifficultyLevel::HARD:
+        return 72; 
+    default:
+        return -1;
+    }
+}
+
+Game::DifficultyLevel Game::getCurrentDifficulty(int sliderVal) {
+    if (abs(sliderVal - getDifficultySliderValue(DifficultyLevel::EASY)) < 5) {
+        return DifficultyLevel::EASY;
+    }
+    else if (abs(sliderVal - getDifficultySliderValue(DifficultyLevel::MEDIUM)) < 5) {
+        return DifficultyLevel::MEDIUM;
+    }
+    else if (abs(sliderVal - getDifficultySliderValue(DifficultyLevel::HARD)) < 5){
+        return DifficultyLevel::HARD;
+    }
+    return DifficultyLevel::CUSTOM;
+}
+
+template<typename T>
+const T& clamp(const T& val, const T& lower, const T& upper) {
+    if (val < lower) return lower;
+    else if (val > upper) return upper;
+    else return val;
+}
+
 
 void Game::handleEvents() {
     SDL_Event e;
@@ -125,8 +191,24 @@ void Game::handleEvents() {
                 else if (isMouseOverButton(hardButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::HARD);
                 }
+                else if (mouseY >= 540 && mouseY <= 570) {
+                    sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);
+                    DifficultyLevel now = getCurrentDifficulty(sliderValue);
+                    
+                    // Set to closest default difficulty if within snap range
+                    if (now == DifficultyLevel::CUSTOM) {
+                        cout << "Custom difficulty set: " << sliderValue << "%" << endl;
+                        sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);
+                        setCustomDifficulty(sliderValue);
+                    }
+                    else {
+                        cout << "Custom difficulty set to default: " << difficultyToString(getCurrentDifficulty(sliderValue)) << endl;
+                        sliderValue = getDifficultySliderValue(now);
+                    }
+                	setDifficulty(now);
+                }
                 else if (isMouseOverButton(startButton, mouseX, mouseY)) {
-                    currentState = GameState::PLAYING; // Change to PLAYING state but don't reset
+                    currentState = GameState::PLAYING;
                 }
                 else if (isMouseOverButton(highScoresButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
                     currentState = GameState::VIEW_HIGH_SCORES;

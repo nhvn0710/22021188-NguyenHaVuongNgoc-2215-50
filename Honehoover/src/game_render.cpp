@@ -62,6 +62,54 @@ void Game::renderButton(const Button& button) {
     renderText(button.text, button.rect.x + 10, button.rect.y + 10, textColor);
 }
 
+int Game::getSliderPosition(int value) {
+    const int sliderMaxPos = SCREEN_WIDTH - 60;
+    const int sliderStart = 20;
+
+    int easyPos = sliderStart + (getDifficultySliderValue(DifficultyLevel::EASY) * sliderMaxPos / 100);
+    int mediumPos = sliderStart + (getDifficultySliderValue(DifficultyLevel::MEDIUM) * sliderMaxPos / 100);
+    int hardPos = sliderStart + (getDifficultySliderValue(DifficultyLevel::HARD) * sliderMaxPos / 100);
+
+    int customPos = sliderStart + (value * sliderMaxPos / 100);
+    if (abs(customPos - easyPos) < 10) customPos = easyPos;
+    if (abs(customPos - mediumPos) < 10) customPos = mediumPos;
+    if (abs(customPos - hardPos) < 10) customPos = hardPos;
+
+    return customPos;
+}
+
+void Game::renderSlider() {
+    SDL_Rect sliderBar = { 20, 550, SCREEN_WIDTH - 40, 10 };
+    SDL_Rect sliderHandle = { getSliderPosition(sliderValue), 540, 20, 30 };
+
+    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+    SDL_RenderFillRect(renderer, &sliderBar);
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+    SDL_RenderFillRect(renderer, &sliderHandle);
+
+    SDL_Color textColor = { 0, 0, 0, 255 };
+    string difficultyText;
+    DifficultyLevel tmp = getCurrentDifficulty(sliderValue);
+    if (tmp==DifficultyLevel::CUSTOM) {
+        difficultyText = to_string(customDifficulty.width) + "x" + to_string(customDifficulty.height) + " " + to_string(customDifficulty.mineCount) + " mines";
+    }
+    else {
+        if (tmp==DifficultyLevel::EASY)
+        {
+            difficultyText = to_string(difficulties[0].width) + "x" + to_string(difficulties[0].height) + " " + to_string(difficulties[0].mineCount) + " mines";
+        } else
+        if (tmp==DifficultyLevel::MEDIUM){
+            difficultyText = to_string(difficulties[1].width) + "x" + to_string(difficulties[1].height) + " " + to_string(difficulties[1].mineCount) + " mines";
+        } else
+        {
+            difficultyText = to_string(difficulties[2].width) + "x" + to_string(difficulties[2].height) + " " + to_string(difficulties[2].mineCount) + " mines";
+        }
+    }
+
+    renderText(difficultyText, sliderHandle.x + sliderHandle.w / 2 - 30, sliderHandle.y - 20, textColor);
+}
+
 bool Game::isMouseOverButton(const Button& button, int mouseX, int mouseY) {
     return (mouseX >= button.rect.x && mouseX <= button.rect.x + button.rect.w &&
         mouseY >= button.rect.y && mouseY <= button.rect.y + button.rect.h);
@@ -76,6 +124,7 @@ void Game::renderMainMenu() {
     renderButton(easyButton);
     renderButton(mediumButton);
     renderButton(hardButton);
+    renderSlider();
 
     SDL_Color titleColor = { 0, 0, 0, 255 };
     renderText("Honehoover", SCREEN_WIDTH / 2 - 100, 100, titleColor);
@@ -95,7 +144,7 @@ void Game::renderGameScreen() {
     renderText(timeText, 10, SCREEN_HEIGHT - 30, textColor);
 
     string flagText = "Flags: " + to_string(remainingFlags);
-    renderText(flagText, SCREEN_WIDTH - 120, SCREEN_HEIGHT - 30, textColor);
+    renderText(flagText, SCREEN_WIDTH - 160, SCREEN_HEIGHT - 30, textColor);
 }
 
 void Game::renderGameOverScreen() {

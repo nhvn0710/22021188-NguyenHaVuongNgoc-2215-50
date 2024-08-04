@@ -1,5 +1,7 @@
 19 Easy
 114 Medium
+13 Custom
+67 Easy
 103 Easy
 108 Easy
 113 Easy
@@ -11,5 +13,3 @@
 513 Easy
 603 Easy
 608 Easy
-613 Easy
-999 Easy

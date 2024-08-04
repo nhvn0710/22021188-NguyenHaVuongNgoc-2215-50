@@ -31,7 +31,7 @@ void Game::updateHighScores() {
         highScores.push_back(newScore);
         sort(highScores.begin(), highScores.end(), compareHighScores);
 
-        // Trim list to top 5
+        // Trim list to top 15
         if (highScores.size() > 15) {
             highScores.resize(15);
         }
@@ -53,7 +53,12 @@ void Game::saveHighScores() {
 bool Game::compareHighScores(const HighScore& a, const HighScore& b) {
     int weightA = a.difficulty == DifficultyLevel::HARD ? 1 : a.difficulty == DifficultyLevel::MEDIUM ? 6 : 24;
     int weightB = b.difficulty == DifficultyLevel::HARD ? 1 : b.difficulty == DifficultyLevel::MEDIUM ? 6 : 24;
-
+    if (a.difficulty == DifficultyLevel::CUSTOM) {
+        weightA = 100;
+    }
+    if (b.difficulty == DifficultyLevel::CUSTOM) {
+        weightB = 100;
+    }
     return a.time * weightA < b.time * weightB;
 }
 
