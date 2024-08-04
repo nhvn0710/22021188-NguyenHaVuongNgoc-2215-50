@@ -9,7 +9,7 @@
 using namespace std;
 
 Board::Board(int width, int height, int mineCount)
-    : width(width), height(height), mineCount(mineCount), gameOver(false) {
+    : width(width), height(height), mineCount(mineCount), gameOver(false), firstReveal(false) { // Initialize firstReveal to false
     reset();
 }
 
@@ -17,35 +17,36 @@ void Board::reset() {
     cells.clear();
     cells.resize(height, vector<Cell>(width));
     gameOver = false;
+    firstReveal = false;
     initializeBoard();
 }
 
 void Board::initializeBoard() {
-    placeMines();
     calculateAdjacentMines();
 }
 
-void Board::placeMines() {
+void Board::placeMines(int firstX, int firstY) {
     vector<int> positions(width * height);
     iota(positions.begin(), positions.end(), 0);
+
+    positions.erase(remove_if(positions.begin(), positions.end(), [this, firstX, firstY](int pos) {
+        int x = pos % width, y = pos / width;
+        return abs(x - firstX) <= 1 && abs(y - firstY) <= 1;
+        }), positions.end());
+
     random_device rd;
     mt19937 g(rd());
     g.seed(chrono::steady_clock::now().time_since_epoch().count());
-    vector<int> innerPositions;
-    copy_if(positions.begin(), positions.end(), back_inserter(innerPositions), [this](int i) {
-        int x = i % width, y = i / width;
-        // Exclude the edges
-        return x > 0 && x < width - 1 && y > 0 && y < height - 1;
-        });
+    shuffle(positions.begin(), positions.end(), g);
 
-    shuffle(innerPositions.begin(), innerPositions.end(), g);
     for (int i = 0; i < mineCount; ++i) {
-        int pos = innerPositions[i];
+        int pos = positions[i];
         int x = pos % width;
         int y = pos / width;
         cells[y][x].setMine(true);
     }
 }
+
 
 void Board::calculateAdjacentMines() {
     for (int y = 0; y < height; ++y) {
@@ -74,6 +75,12 @@ int Board::countAdjacentMines(int x, int y) const {
 bool Board::revealCell(int x, int y) {
     if (x < 0 || x >= width || y < 0 || y >= height || cells[y][x].isRevealed() || cells[y][x].isFlagged()) {
         return false;
+    }
+
+    if (!firstReveal) {
+        firstReveal = true;
+        placeMines(x, y); 
+        calculateAdjacentMines();
     }
 
     cells[y][x].reveal();

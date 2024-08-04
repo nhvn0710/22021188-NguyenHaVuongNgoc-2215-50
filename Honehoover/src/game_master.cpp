@@ -1,18 +1,22 @@
 #include "game.h"
+
 #include <cstdio>
+#include <iostream>
 
 using namespace std;
 
 Game::Game() : gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0), window(nullptr), renderer(nullptr),
                font(nullptr), currentState(GameState::MAIN_MENU), board(10, 10, 10), currentDifficulty()
 {
+    loadHighScores();
 	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
-	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "Quit"};
+	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "Quit"};
 	backButton = {{20, 20, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2}, "Back"};
 	newGameButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "New Game"};
 	easyButton = {{20, 150, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Easy"};
 	mediumButton = {{20, 200, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Medium"};
 	hardButton = {{20, 250, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Hard"};
+    highScoresButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT},"High Scores"};
 }
 
 Game::~Game() {
@@ -73,21 +77,98 @@ void Game::run() {
     }
 }
 
+const Game::Difficulty Game::difficulties[] = {
+    { 12, 9, 4 },
+    { 20, 15, 20 }, 
+    { 30, 24, 184 }
+};
+
 void Game::setDifficulty(DifficultyLevel level) {
     switch (level) {
     case DifficultyLevel::EASY:
-        board = Board(8, 8, 10);
+        board = Board(12, 9, 4);
         break;
     case DifficultyLevel::MEDIUM:
-        board = Board(16, 16, 40);
+        board = Board(20, 15, 20);
         break;
     case DifficultyLevel::HARD:
-        board = Board(24, 24, 99);
+        board = Board(30, 24, 184);
         break;
+    case DifficultyLevel::CUSTOM:
+            board = Board(customDifficulty.width, customDifficulty.height, customDifficulty.mineCount);
+            if (customDifficulty == difficulties[0]) { //0
+                currentDifficulty = DifficultyLevel::EASY;
+            }
+            else if (customDifficulty == difficulties[1]) { //32
+                currentDifficulty = DifficultyLevel::MEDIUM;
+            }
+            else if (customDifficulty == difficulties[2]) { //72
+                currentDifficulty = DifficultyLevel::HARD;
+            }
+            else {
+                currentDifficulty = DifficultyLevel::CUSTOM;
+            }
+            break;
     }
     currentDifficulty = level;
-    resetGame();
 }
+
+void Game::setCustomDifficulty(int sliderVal)
+{
+    int width = 12 + sliderVal * 5 / 20;
+    int height = 9 + sliderVal * 5 / 24;
+    int mineCount = 4 + sliderVal * (0.5 + (sliderVal * sliderVal) / 2000);
+    customDifficulty = { width, height, mineCount, true };
+}
+
+string Game::difficultyToString(DifficultyLevel level) {
+    switch (level) {
+    case DifficultyLevel::EASY:
+        return "Easy";
+    case DifficultyLevel::MEDIUM:
+        return "Medium";
+    case DifficultyLevel::HARD:
+        return "Hard";
+    case DifficultyLevel::CUSTOM:
+        return "Custom";
+    default:
+        return "Unknown Difficulty";
+    }
+}
+
+int Game::getDifficultySliderValue(DifficultyLevel level) {
+    switch (level) {
+    case DifficultyLevel::EASY:
+        return 0; 
+    case DifficultyLevel::MEDIUM:
+        return 32;
+    case DifficultyLevel::HARD:
+        return 72; 
+    default:
+        return -1;
+    }
+}
+
+Game::DifficultyLevel Game::getCurrentDifficulty(int sliderVal) {
+    if (abs(sliderVal - getDifficultySliderValue(DifficultyLevel::EASY)) < 5) {
+        return DifficultyLevel::EASY;
+    }
+    else if (abs(sliderVal - getDifficultySliderValue(DifficultyLevel::MEDIUM)) < 5) {
+        return DifficultyLevel::MEDIUM;
+    }
+    else if (abs(sliderVal - getDifficultySliderValue(DifficultyLevel::HARD)) < 5){
+        return DifficultyLevel::HARD;
+    }
+    return DifficultyLevel::CUSTOM;
+}
+
+template<typename T>
+const T& clamp(const T& val, const T& lower, const T& upper) {
+    if (val < lower) return lower;
+    else if (val > upper) return upper;
+    else return val;
+}
+
 
 void Game::handleEvents() {
     SDL_Event e;
@@ -110,11 +191,36 @@ void Game::handleEvents() {
                 else if (isMouseOverButton(hardButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::HARD);
                 }
-                if (isMouseOverButton(startButton, mouseX, mouseY)) {
-                    resetGame();
+                else if (mouseY >= 540 && mouseY <= 570) {
+                    sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);
+                    DifficultyLevel now = getCurrentDifficulty(sliderValue);
+                    
+                    // Set to closest default difficulty if within snap range
+                    if (now == DifficultyLevel::CUSTOM) {
+                        cout << "Custom difficulty set: " << sliderValue << "%" << endl;
+                        sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);
+                        setCustomDifficulty(sliderValue);
+                    }
+                    else {
+                        cout << "Custom difficulty set to default: " << difficultyToString(getCurrentDifficulty(sliderValue)) << endl;
+                        sliderValue = getDifficultySliderValue(now);
+                    }
+                	setDifficulty(now);
+                }
+                else if (isMouseOverButton(startButton, mouseX, mouseY)) {
+                    currentState = GameState::PLAYING;
+                }
+                else if (isMouseOverButton(highScoresButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
+                    currentState = GameState::VIEW_HIGH_SCORES;
                 }
                 else if (isMouseOverButton(quitButton, mouseX, mouseY)) {
                     currentState = GameState::QUIT;
+                }
+                break;
+            case GameState::VIEW_HIGH_SCORES: {
+                    if (isMouseOverButton(backButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
+                        currentState = GameState::MAIN_MENU;
+                    }
                 }
                 break;
             case GameState::PLAYING:
@@ -159,6 +265,7 @@ void Game::update() {
             gameWon = true;
             gameTimer.stop();
             finalTime = elapsedSeconds;
+            updateHighScores();
         }
 
         // Check for lose condition
@@ -178,122 +285,6 @@ void Game::update() {
         // Update flag count
         remainingFlags = board.getMineCount() - board.getFlagCount();
     }
-}
-
-void Game::render() {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderClear(renderer);
-
-    switch (currentState) {
-    case GameState::MAIN_MENU:
-        renderMainMenu();
-        break;
-    case GameState::PLAYING:
-        renderGameScreen();
-        break;
-    case GameState::GAME_OVER:
-        if (gameWon) {
-            renderWinScreen();
-        }
-        else {
-            renderGameOverScreen();
-        }
-        break;
-    }
-
-    SDL_RenderPresent(renderer);
-}
-
-void Game::renderText(const string& text, int x, int y, SDL_Color color) {
-    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-    int width, height;
-    SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
-    SDL_Rect dstRect = { x, y, width, height };
-
-    SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
-
-    SDL_FreeSurface(surface);
-    SDL_DestroyTexture(texture);
-}
-
-void Game::renderCenteredText(const string& text, int y, SDL_Color color) {
-    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-    int textWidth = surface->w;
-    int textHeight = surface->h;
-    SDL_Rect textRect = { (SCREEN_WIDTH - textWidth) / 2, y, textWidth, textHeight };
-
-    SDL_FreeSurface(surface);
-    SDL_RenderCopy(renderer, texture, nullptr, &textRect);
-    SDL_DestroyTexture(texture);
-}
-
-void Game::renderButton(const Button& button) {
-    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-    SDL_RenderFillRect(renderer, &button.rect);
-
-    SDL_Color textColor = { 0, 0, 0, 255 };
-    renderText(button.text, button.rect.x + 10, button.rect.y + 10, textColor);
-}
-
-bool Game::isMouseOverButton(const Button& button, int mouseX, int mouseY) {
-    return (mouseX >= button.rect.x && mouseX <= button.rect.x + button.rect.w &&
-        mouseY >= button.rect.y && mouseY <= button.rect.y + button.rect.h);
-}
-
-void Game::renderMainMenu() {
-    SDL_SetRenderDrawColor(renderer, 0xAA, 0xFF, 0xDD, 255);
-    SDL_RenderClear(renderer);
-
-    renderButton(startButton);
-    renderButton(quitButton);
-    renderButton(easyButton);
-    renderButton(mediumButton);
-    renderButton(hardButton);
-
-    SDL_Color titleColor = { 0, 0, 0, 255 };
-    renderText("Honehoover", SCREEN_WIDTH / 2 - 100, 100, titleColor);
-}
-
-void Game::renderGameScreen() {
-    board.render(renderer, font, SCREEN_WIDTH, SCREEN_HEIGHT);
-    renderButton(backButton);
-
-    SDL_Color textColor = { 0, 0, 0, 255 };
-    string timeText = "Time: " + to_string(elapsedSeconds) + " s";
-    renderText(timeText, 10, SCREEN_HEIGHT - 30, textColor);
-
-    string flagText = "Flags: " + to_string(remainingFlags);
-    renderText(flagText, SCREEN_WIDTH - 120, SCREEN_HEIGHT - 30, textColor);
-}
-
-void Game::renderGameOverScreen() {
-    SDL_SetRenderDrawColor(renderer, 255, 200, 200, 255);
-    SDL_RenderClear(renderer);
-
-    SDL_Color textColor = { 0, 0, 0, 255 };
-    renderText("Game Over!", SCREEN_WIDTH / 2 - 100, 100, textColor);
-    renderText("You Lost!", SCREEN_WIDTH / 2 - 80, 150, textColor);
-    renderButton(newGameButton);
-    renderButton(backButton);
-}
-
-void Game::renderWinScreen() {
-    SDL_SetRenderDrawColor(renderer, 200, 255, 200, 255);
-    SDL_RenderClear(renderer);
-
-    SDL_Color textColor = { 0, 0, 0, 255 };
-
-    string timeText = "Time: " + to_string(finalTime) + " seconds";
-    renderText(timeText, SCREEN_WIDTH / 2 - 100, 200, textColor);
-
-    renderButton(newGameButton);
-    renderButton(backButton);
-    string victoryMessage = "You cleared all mines! Well done!";
-    renderCenteredText(victoryMessage, SCREEN_HEIGHT / 2 + 50, textColor);
 }
 
 void Game::resetGame() {

@@ -4,8 +4,6 @@
 
 #include "cell.h"
 
-#pragma once
-
 class Board {
 public:
     Board(int width, int height, int mineCount);
@@ -22,8 +20,9 @@ public:
     int getFlagCount() const;
 
 private:
+    bool firstReveal;
     void initializeBoard();
-    void placeMines();
+    void placeMines(int firstX, int firstY);
     void calculateAdjacentMines();
     int countAdjacentMines(int x, int y) const;
     void revealAdjacentCells(int x, int y);
