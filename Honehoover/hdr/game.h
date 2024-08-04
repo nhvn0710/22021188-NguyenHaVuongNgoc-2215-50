@@ -53,7 +53,6 @@ private:
     bool initSDL();
     void setCustomDifficulty(int);
     int getDifficultySliderValue(DifficultyLevel);
-    bool isCloseToDefaultDifficulty(int);
     DifficultyLevel getCurrentDifficulty(int);
     void handleEvents();
     void update();

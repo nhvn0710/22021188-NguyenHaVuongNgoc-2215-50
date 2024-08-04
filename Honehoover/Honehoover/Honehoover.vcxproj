@@ -43,6 +43,10 @@
     <Font Include="..\resources\font\QX_LatypeSans.ttf" />
     <Font Include="..\resources\font\Restore-W00-Heavy.ttf" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\resources\image\flag.png" />
+    <Image Include="..\resources\image\mine.png" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -96,8 +100,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\Paths\vclib\SDL2_ttf-devel-2.22.0-VC\SDL2_ttf-2.22.0\include;D:\Paths\vclib\SDL2-devel-2.30.5-VC\SDL2-2.30.5\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Paths\vclib\SDL2-devel-2.30.5-VC\SDL2-2.30.5\lib\x64;D:\Paths\vclib\SDL2_ttf-devel-2.22.0-VC\SDL2_ttf-2.22.0\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Paths\vclib\SDL2_image-devel-2.8.2-VC\SDL2_image-2.8.2\include;D:\Paths\vclib\SDL2_ttf-devel-2.22.0-VC\SDL2_ttf-2.22.0\include;D:\Paths\vclib\SDL2-devel-2.30.5-VC\SDL2-2.30.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Paths\vclib\SDL2-devel-2.30.5-VC\SDL2-2.30.5\lib\x64;D:\Paths\vclib\SDL2_ttf-devel-2.22.0-VC\SDL2_ttf-2.22.0\lib\x64;D:\Paths\vclib\SDL2_image-devel-2.8.2-VC\SDL2_image-2.8.2\lib\x64;$(LibraryPath)</LibraryPath>
     <SourcePath>C:\Users\vuong\source\repos\221550\Honehoover\Honehoover\src;$(SourcePath)</SourcePath>
     <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
   </PropertyGroup>
@@ -140,7 +144,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

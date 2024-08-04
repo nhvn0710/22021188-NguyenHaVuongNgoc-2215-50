@@ -90,8 +90,8 @@ void Game::renderSlider() {
             difficultyText = to_string(difficulties[2].width) + "x" + to_string(difficulties[2].height) + " " + to_string(difficulties[2].mineCount) + " mines";
         }
     }
-
-    renderText(difficultyText, sliderHandle.x + sliderHandle.w / 2 - 30, sliderHandle.y - 20, textColor);
+    double tmpn = sliderHandle.x*((100-sliderValue)/500+0.8) + sliderHandle.w / 2 - 10;
+    renderText(difficultyText, tmpn, sliderHandle.y - 20, textColor);
 }
 
 void Game::renderMainMenu() {

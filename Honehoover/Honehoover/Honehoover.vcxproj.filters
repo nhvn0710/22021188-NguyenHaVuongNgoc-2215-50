@@ -73,4 +73,12 @@
       <Filter>Resource Files</Filter>
     </Font>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\resources\image\flag.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\mine.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
