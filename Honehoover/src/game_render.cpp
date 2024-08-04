@@ -62,22 +62,6 @@ void Game::renderButton(const Button& button) {
     renderText(button.text, button.rect.x + 10, button.rect.y + 10, textColor);
 }
 
-int Game::getSliderPosition(int value) {
-    const int sliderMaxPos = SCREEN_WIDTH - 60;
-    const int sliderStart = 20;
-
-    int easyPos = sliderStart + (getDifficultySliderValue(DifficultyLevel::EASY) * sliderMaxPos / 100);
-    int mediumPos = sliderStart + (getDifficultySliderValue(DifficultyLevel::MEDIUM) * sliderMaxPos / 100);
-    int hardPos = sliderStart + (getDifficultySliderValue(DifficultyLevel::HARD) * sliderMaxPos / 100);
-
-    int customPos = sliderStart + (value * sliderMaxPos / 100);
-    if (abs(customPos - easyPos) < 10) customPos = easyPos;
-    if (abs(customPos - mediumPos) < 10) customPos = mediumPos;
-    if (abs(customPos - hardPos) < 10) customPos = hardPos;
-
-    return customPos;
-}
-
 void Game::renderSlider() {
     SDL_Rect sliderBar = { 20, 550, SCREEN_WIDTH - 40, 10 };
     SDL_Rect sliderHandle = { getSliderPosition(sliderValue), 540, 20, 30 };
@@ -108,11 +92,6 @@ void Game::renderSlider() {
     }
 
     renderText(difficultyText, sliderHandle.x + sliderHandle.w / 2 - 30, sliderHandle.y - 20, textColor);
-}
-
-bool Game::isMouseOverButton(const Button& button, int mouseX, int mouseY) {
-    return (mouseX >= button.rect.x && mouseX <= button.rect.x + button.rect.w &&
-        mouseY >= button.rect.y && mouseY <= button.rect.y + button.rect.h);
 }
 
 void Game::renderMainMenu() {
@@ -171,7 +150,6 @@ void Game::renderWinScreen() {
     renderButton(backButton);
     string victoryMessage = "You cleared all mines! Well done!";
     renderCenteredText(victoryMessage, SCREEN_HEIGHT / 2 + 50, textColor);
-    displayHighScores();
 }
 
 void Game::renderHighScoreScreen() {

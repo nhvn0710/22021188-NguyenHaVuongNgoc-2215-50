@@ -24,6 +24,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\board.cpp" />
     <ClCompile Include="..\src\cell.cpp" />
+    <ClCompile Include="..\src\game_getter.cpp" />
     <ClCompile Include="..\src\game_master.cpp" />
     <ClCompile Include="..\src\game_render.cpp" />
     <ClCompile Include="..\src\game_scores.cpp" />
