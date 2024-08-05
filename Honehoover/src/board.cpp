@@ -142,19 +142,17 @@ void Board::render(SDL_Renderer* renderer, TTF_Font* font, int screenWidth, int 
 
             if (cells[y][x].isRevealed()) {
                 if (cells[y][x].isMine()) {
-                    SDL_RenderCopy(renderer, textures.at("mine"), nullptr, &cellRect);
+                    SDL_RenderCopy(renderer, textures.at("cross"), nullptr, &cellRect);
                 }
                 else {
-                    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-                    SDL_RenderFillRect(renderer, &cellRect);
+                    SDL_RenderCopy(renderer, textures.at("clean"), nullptr, &cellRect);
                 }
             }
             else if (cells[y][x].isFlagged()) {
-                SDL_RenderCopy(renderer, textures.at("flag"), nullptr, &cellRect);
+                SDL_RenderCopy(renderer, textures.at("frame"), nullptr, &cellRect);
             }
             else {
-                SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
-                SDL_RenderFillRect(renderer, &cellRect);
+                SDL_RenderCopy(renderer, textures.at("grass"), nullptr, &cellRect);
             }
 
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

@@ -74,10 +74,28 @@
     </Font>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\resources\image\flag.png">
+    <Image Include="..\resources\image\antiq.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="..\resources\image\mine.png">
+    <Image Include="..\resources\image\cross.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\frame.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\pylon.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\steel.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\clean.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\crtal.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

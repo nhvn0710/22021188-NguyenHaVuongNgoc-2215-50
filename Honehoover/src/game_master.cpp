@@ -96,8 +96,14 @@ SDL_Texture* Game::loadTexture(const string& path) {
 }
 
 void Game::loadTextures() {
-    textures["mine"] = loadTexture("../resources/image/mine.png");
-    textures["flag"] = loadTexture("../resources/image/flag.png");
+    textures["antiq"] = loadTexture("../resources/image/antiq.png");
+    textures["cross"] = loadTexture("../resources/image/cross.png");
+    textures["frame"] = loadTexture("../resources/image/frame.png");
+    textures["grass"] = loadTexture("../resources/image/grass.png");
+    textures["pylon"] = loadTexture("../resources/image/pylon.png");
+    textures["steel"] = loadTexture("../resources/image/steel.png");
+    textures["crtal"] = loadTexture("../resources/image/crtal.png");
+    textures["clean"] = loadTexture("../resources/image/clean.png");
 }
 
 void Game::renderTexture(const string& textureId, int x, int y, int width, int height) {
@@ -289,6 +295,11 @@ void Game::setCustomDifficulty(int sliderVal)
 {
     int width = 12 + sliderVal * 5 / 20;
     int height = 9 + sliderVal * 5 / 24;
+    if (sliderVal==100)
+    {
+        width = 40;
+        height = 30;
+    }
     int mineCount = 4 + sliderVal * (0.5 + (static_cast<double>(sliderVal) * sliderVal) / 2000);
     customDifficulty = { width, height, mineCount, true };
 }

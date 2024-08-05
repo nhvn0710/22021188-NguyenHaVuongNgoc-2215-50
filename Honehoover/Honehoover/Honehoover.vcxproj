@@ -44,8 +44,14 @@
     <Font Include="..\resources\font\Restore-W00-Heavy.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\resources\image\flag.png" />
-    <Image Include="..\resources\image\mine.png" />
+    <Image Include="..\resources\image\antiq.png" />
+    <Image Include="..\resources\image\clean.png" />
+    <Image Include="..\resources\image\cross.png" />
+    <Image Include="..\resources\image\crtal.png" />
+    <Image Include="..\resources\image\frame.png" />
+    <Image Include="..\resources\image\grass.png" />
+    <Image Include="..\resources\image\pylon.png" />
+    <Image Include="..\resources\image\steel.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
