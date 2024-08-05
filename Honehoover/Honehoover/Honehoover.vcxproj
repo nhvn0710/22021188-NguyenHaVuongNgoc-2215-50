@@ -45,11 +45,13 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\resources\image\antiq.png" />
+    <Image Include="..\resources\image\btton.png" />
     <Image Include="..\resources\image\clean.png" />
     <Image Include="..\resources\image\cross.png" />
     <Image Include="..\resources\image\crtal.png" />
     <Image Include="..\resources\image\frame.png" />
     <Image Include="..\resources\image\grass.png" />
+    <Image Include="..\resources\image\mmnbg.png" />
     <Image Include="..\resources\image\pylon.png" />
     <Image Include="..\resources\image\steel.png" />
   </ItemGroup>

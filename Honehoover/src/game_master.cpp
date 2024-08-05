@@ -10,8 +10,8 @@ Game::Game() : gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0
 {
     loadHighScores();
 	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
-	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "Quit"};
-	backButton = {{20, TRUE_SCREEN_HEIGHT - BUTTON_HEIGHT, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2}, "Back"};
+	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "        Quit  "};
+	backButton = {{20, SCREEN_HEIGHT+10, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2}, "Back"};
 	newGameButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "New Game"};
 	easyButton = {{20, 150, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Easy"};
 	mediumButton = {{20, 200, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Medium"};
@@ -101,10 +101,11 @@ void Game::loadTextures() {
     textures["cross"] = loadTexture("../resources/image/cross.png");
     textures["frame"] = loadTexture("../resources/image/frame.png");
     textures["grass"] = loadTexture("../resources/image/grass.png");
+	textures["clean"] = loadTexture("../resources/image/clean.png");
     textures["pylon"] = loadTexture("../resources/image/pylon.png");
     textures["steel"] = loadTexture("../resources/image/steel.png");
-    textures["crtal"] = loadTexture("../resources/image/crtal.png");
-    textures["clean"] = loadTexture("../resources/image/clean.png");
+    textures["btton"] = loadTexture("../resources/image/btton.png");
+    textures["mmnbg"] = loadTexture("../resources/image/mmnbg.png");
 }
 
 void Game::renderTexture(const string& textureId, int x, int y, int width, int height) {

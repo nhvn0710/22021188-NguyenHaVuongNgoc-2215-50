@@ -55,12 +55,18 @@ void Game::renderCenteredText(const string& text, int y, SDL_Color color) {
 }
 
 void Game::renderButton(const Button& button) {
-    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-    SDL_RenderFillRect(renderer, &button.rect);
-
+    SDL_Texture* buttonBgTexture = textures["btton"];
+    if (buttonBgTexture) {
+        SDL_RenderCopy(renderer, buttonBgTexture, nullptr, &button.rect);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+        SDL_RenderFillRect(renderer, &button.rect);
+    }
     SDL_Color textColor = { 0, 0, 0, 255 };
-    renderText(button.text, button.rect.x + 10, button.rect.y + 10, textColor);
+    renderText(button.text, button.rect.x + 68, button.rect.y + 35, textColor);
 }
+
 
 void Game::renderSlider() {
     SDL_Rect sliderBar = { 20, 550, SCREEN_WIDTH - 40, 10 };
@@ -99,8 +105,17 @@ void Game::renderSlider() {
 }
 
 void Game::renderMainMenu() {
-    SDL_SetRenderDrawColor(renderer, 0xAA, 0xFF, 0xDD, 255);
-    SDL_RenderClear(renderer);
+    SDL_Texture* backgroundTexture = textures["mmnbg"];
+    if (backgroundTexture) {
+        // Draw the background texture covering the full window
+        SDL_Rect renderQuad = { 0, 0, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT };
+        SDL_RenderCopy(renderer, backgroundTexture, nullptr, &renderQuad);
+    }
+    else {
+        // Fallback to a solid color if the texture isn't found.
+        SDL_SetRenderDrawColor(renderer, 0xAA, 0xFF, 0xDD, 255);
+        SDL_RenderClear(renderer);
+    }
 
     renderButton(startButton);
     renderButton(quitButton);
@@ -120,6 +135,17 @@ void Game::renderMainMenu() {
 
 
 void Game::renderGameScreen() {
+    SDL_Texture* backgroundTexture = textures["mmnbg"];
+    if (backgroundTexture) {
+        // Draw the background texture covering the full window
+        SDL_Rect renderQuad = { 0, 0, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT };
+        SDL_RenderCopy(renderer, backgroundTexture, nullptr, &renderQuad);
+    }
+    else {
+        // Fallback to a solid color if the texture isn't found.
+        SDL_SetRenderDrawColor(renderer, 0xAA, 0xFF, 0xDD, 255);
+        SDL_RenderClear(renderer);
+    }
     board.render(renderer, font, SCREEN_WIDTH, SCREEN_HEIGHT, textures);
     renderButton(backButton);
 

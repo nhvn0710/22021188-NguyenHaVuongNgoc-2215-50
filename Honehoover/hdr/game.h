@@ -122,8 +122,8 @@ private:
     static const int SCREEN_HEIGHT = 720;
     static const int NAVIGATE_HEIGHT = 60;
     static const int TRUE_SCREEN_HEIGHT = SCREEN_HEIGHT+NAVIGATE_HEIGHT;
-    static const int BUTTON_WIDTH = 200;
-    static const int BUTTON_HEIGHT = 50;
+    static const int BUTTON_WIDTH = 300;
+    static const int BUTTON_HEIGHT = 100;
     static const Difficulty difficulties[4];
 
 };
