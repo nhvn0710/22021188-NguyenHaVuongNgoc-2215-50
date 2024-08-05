@@ -11,11 +11,12 @@ Game::Game() : gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0
     loadHighScores();
 	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
 	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "Quit"};
-	backButton = {{20, 20, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2}, "Back"};
+	backButton = {{20, TRUE_SCREEN_HEIGHT - BUTTON_HEIGHT, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2}, "Back"};
 	newGameButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "New Game"};
 	easyButton = {{20, 150, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Easy"};
 	mediumButton = {{20, 200, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Medium"};
-	hardButton = {{20, 250, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Hard"};
+    hardButton = { {20, 250, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Hard" };
+	veryhardButton = {{20, 300, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Very Hard"};
     highScoresButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT},"High Scores"};
 }
 
@@ -45,7 +46,7 @@ bool Game::initSDL() {
         return false;
     }
 
-    window = SDL_CreateWindow("Honehoover", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Honehoover", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == nullptr) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return false;
@@ -163,6 +164,9 @@ void Game::handleEvents() {
                 else if (isMouseOverButton(hardButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::HARD);
                 }
+                else if (isMouseOverButton(veryhardButton, mouseX, mouseY)) {
+                    setDifficulty(DifficultyLevel::VERYHARD);
+                }
                 else if (mouseY >= 540 && mouseY <= 570) {
                     sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);
                     DifficultyLevel now = getCurrentDifficulty(sliderValue);
@@ -270,6 +274,9 @@ void Game::setDifficulty(DifficultyLevel level) {
         board = Board(20, 15, 20);
         break;
     case DifficultyLevel::HARD:
+        board = Board(24, 18, 90);
+        break;
+    case DifficultyLevel::VERYHARD:
         board = Board(30, 24, 184);
         break;
     case DifficultyLevel::CUSTOM:
@@ -280,8 +287,11 @@ void Game::setDifficulty(DifficultyLevel level) {
         else if (customDifficulty == difficulties[1]) { //32
             currentDifficulty = DifficultyLevel::MEDIUM;
         }
-        else if (customDifficulty == difficulties[2]) { //72
+        else if (customDifficulty == difficulties[2]) { //50
             currentDifficulty = DifficultyLevel::HARD;
+        }
+        else if (customDifficulty == difficulties[3]) { //72
+            currentDifficulty = DifficultyLevel::VERYHARD;
         }
         else {
             currentDifficulty = DifficultyLevel::CUSTOM;

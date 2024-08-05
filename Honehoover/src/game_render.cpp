@@ -85,9 +85,13 @@ void Game::renderSlider() {
         } else
         if (tmp==DifficultyLevel::MEDIUM){
             difficultyText = to_string(difficulties[1].width) + "x" + to_string(difficulties[1].height) + " " + to_string(difficulties[1].mineCount) + " mines";
-        } else
+        } else 
+            if (tmp == DifficultyLevel::HARD) {
+                difficultyText = to_string(difficulties[2].width) + "x" + to_string(difficulties[2].height) + " " + to_string(difficulties[2].mineCount) + " mines";
+            }
+            else
         {
-            difficultyText = to_string(difficulties[2].width) + "x" + to_string(difficulties[2].height) + " " + to_string(difficulties[2].mineCount) + " mines";
+            difficultyText = to_string(difficulties[3].width) + "x" + to_string(difficulties[3].height) + " " + to_string(difficulties[3].mineCount) + " mines";
         }
     }
     double tmpn = sliderHandle.x*((100-sliderValue)/500+0.8) + sliderHandle.w / 2 - 10;
@@ -103,6 +107,7 @@ void Game::renderMainMenu() {
     renderButton(easyButton);
     renderButton(mediumButton);
     renderButton(hardButton);
+    renderButton(veryhardButton);
     renderSlider();
 
     SDL_Color titleColor = { 0, 0, 0, 255 };
@@ -120,10 +125,10 @@ void Game::renderGameScreen() {
 
     SDL_Color textColor = { 0, 0, 0, 255 };
     string timeText = "Time: " + to_string(elapsedSeconds) + " s";
-    renderText(timeText, 10, SCREEN_HEIGHT - 30, textColor);
+    renderText(timeText, SCREEN_WIDTH - 360, TRUE_SCREEN_HEIGHT - 40, textColor);
 
     string flagText = "Flags: " + to_string(remainingFlags);
-    renderText(flagText, SCREEN_WIDTH - 160, SCREEN_HEIGHT - 30, textColor);
+    renderText(flagText, SCREEN_WIDTH - 160, TRUE_SCREEN_HEIGHT - 40, textColor);
 }
 
 void Game::renderGameOverScreen() {
@@ -149,7 +154,7 @@ void Game::renderWinScreen() {
     renderButton(newGameButton);
     renderButton(backButton);
     string victoryMessage = "You cleared all mines! Well done!";
-    renderCenteredText(victoryMessage, SCREEN_HEIGHT / 2 + 50, textColor);
+    renderCenteredText(victoryMessage, TRUE_SCREEN_HEIGHT / 2 + 50, textColor);
 }
 
 void Game::renderHighScoreScreen() {

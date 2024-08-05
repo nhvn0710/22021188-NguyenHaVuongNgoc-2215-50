@@ -44,7 +44,8 @@ private:
     enum class DifficultyLevel {
         EASY,
         MEDIUM,
-        HARD,
+    	HARD,
+        VERYHARD,
         CUSTOM
     };
 
@@ -97,6 +98,7 @@ private:
     Button easyButton;
     Button mediumButton;
     Button hardButton;
+    Button veryhardButton;
     Button highScoresButton;
 
     DifficultyLevel currentDifficulty;
@@ -118,8 +120,10 @@ private:
 
     static const int SCREEN_WIDTH = 960;
     static const int SCREEN_HEIGHT = 720;
+    static const int NAVIGATE_HEIGHT = 60;
+    static const int TRUE_SCREEN_HEIGHT = SCREEN_HEIGHT+NAVIGATE_HEIGHT;
     static const int BUTTON_WIDTH = 200;
     static const int BUTTON_HEIGHT = 50;
-    static const Difficulty difficulties[3];
+    static const Difficulty difficulties[4];
 
 };
