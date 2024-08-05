@@ -2,6 +2,8 @@
 #include <random>
 #include <algorithm>
 #include <chrono>
+#include <iostream>
+#include <map>
 #include <numeric>
 #include <SDL_ttf.h>
 #include <string>
@@ -130,7 +132,7 @@ bool Board::isGameWon() const {
     return true;
 }
 
-void Board::render(SDL_Renderer* renderer, TTF_Font* font, int screenWidth, int screenHeight) const {
+void Board::render(SDL_Renderer* renderer, TTF_Font* font, int screenWidth, int screenHeight, const map<string, SDL_Texture*>& textures) const {
     int cellWidth = screenWidth / width;
     int cellHeight = screenHeight / height;
 
@@ -140,20 +142,20 @@ void Board::render(SDL_Renderer* renderer, TTF_Font* font, int screenWidth, int 
 
             if (cells[y][x].isRevealed()) {
                 if (cells[y][x].isMine()) {
-                    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+                    SDL_RenderCopy(renderer, textures.at("mine"), nullptr, &cellRect);
                 }
                 else {
                     SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+                    SDL_RenderFillRect(renderer, &cellRect);
                 }
             }
             else if (cells[y][x].isFlagged()) {
-                SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+                SDL_RenderCopy(renderer, textures.at("flag"), nullptr, &cellRect);
             }
             else {
                 SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
+                SDL_RenderFillRect(renderer, &cellRect);
             }
-
-            SDL_RenderFillRect(renderer, &cellRect);
 
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderDrawRect(renderer, &cellRect);

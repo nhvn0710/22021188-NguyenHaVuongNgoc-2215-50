@@ -6,7 +6,7 @@
 using namespace std;
 
 Game::Game() : gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0), window(nullptr), renderer(nullptr),
-               font(nullptr), currentState(GameState::MAIN_MENU), board(10, 10, 10), currentDifficulty()
+               font(nullptr), currentState(GameState::MAIN_MENU), board(12, 9, 4), currentDifficulty()
 {
     loadHighScores();
 	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
@@ -21,6 +21,7 @@ Game::Game() : gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0
 
 Game::~Game() {
     cleanUp();
+    freeTextures();
 }
 
 bool Game::initialize() {
@@ -35,9 +36,12 @@ bool Game::initSDL() {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return false;
     }
-
     if (TTF_Init() < 0) {
         printf("TTF could not initialize! TTF_Error: %s\n", TTF_GetError());
+        return false;
+    }
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
         return false;
     }
 
@@ -59,6 +63,8 @@ bool Game::initSDL() {
         return false;
     }
 
+    loadTextures();
+
     if (window == nullptr || renderer == nullptr || font == nullptr) {
         printf("Failed to load SDL components: %s\n", SDL_GetError());
         TTF_Quit();
@@ -67,6 +73,52 @@ bool Game::initSDL() {
     }
 
     return true;
+}
+
+SDL_Texture* Game::loadTexture(const string& path) {
+    // Load image at specified path
+    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+    if (loadedSurface == nullptr) {
+        cout << "Unable to load image " << path << "! SDL_image Error: " << IMG_GetError() << endl;
+        return nullptr;
+    }
+
+    // Create texture from surface pixels
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+    if (texture == nullptr) {
+        cout << "Unable to create texture from " << path << "! SDL Error: " << SDL_GetError() << endl;
+    }
+
+    // Get rid of old loaded surface
+    SDL_FreeSurface(loadedSurface);
+
+    return texture;
+}
+
+void Game::loadTextures() {
+    textures["mine"] = loadTexture("../resources/image/mine.png");
+    textures["flag"] = loadTexture("../resources/image/flag.png");
+}
+
+void Game::renderTexture(const string& textureId, int x, int y, int width, int height) {
+    if (textures.find(textureId) == textures.end()) {
+        cout << "Texture " << textureId << " not found!" << endl;
+        return;
+    }
+
+    SDL_Rect renderQuad = { x, y, width, height };
+
+    SDL_RenderCopy(renderer, textures[textureId], nullptr, &renderQuad);
+}
+
+void Game::freeTextures() {
+    // Free texture resources.
+    for (auto& texture : textures) {
+        if (texture.second != nullptr) {
+            SDL_DestroyTexture(texture.second);
+            texture.second = nullptr;
+        }
+    }
 }
 
 void Game::run() {
@@ -255,6 +307,7 @@ void Game::cleanUp() {
     TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    IMG_Quit();
     TTF_Quit();
     SDL_Quit();
 }

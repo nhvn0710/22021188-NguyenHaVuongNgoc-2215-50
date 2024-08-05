@@ -1,6 +1,8 @@
+#include <map>
 #include <vector>
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <xstring>
 
 #include "cell.h"
 
@@ -12,7 +14,7 @@ public:
     void toggleFlag(int x, int y);
     bool isGameOver() const;
     bool isGameWon() const;
-    void render(SDL_Renderer* renderer, TTF_Font* font, int screenWidth, int screenHeight) const;
+    void render(SDL_Renderer* renderer, TTF_Font* font, int screenWidth, int screenHeight, const map<string, SDL_Texture*>& textures) const;
     void revealAllMines();
     int getWidth() const;
     int getHeight() const;

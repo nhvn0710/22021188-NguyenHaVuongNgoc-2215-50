@@ -115,7 +115,7 @@ void Game::renderMainMenu() {
 
 
 void Game::renderGameScreen() {
-    board.render(renderer, font, SCREEN_WIDTH, SCREEN_HEIGHT);
+    board.render(renderer, font, SCREEN_WIDTH, SCREEN_HEIGHT, textures);
     renderButton(backButton);
 
     SDL_Color textColor = { 0, 0, 0, 255 };

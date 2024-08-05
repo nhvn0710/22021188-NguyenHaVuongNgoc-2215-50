@@ -1,9 +1,12 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_image.h>
 #include <string>
+#include <map>
 
 #include "board.h"
 #include "timer.h"
+
 using namespace std;
 
 class Game {
@@ -49,6 +52,13 @@ private:
         int time;
         DifficultyLevel difficulty;
     };
+
+    map<string, SDL_Texture*> textures;
+
+    SDL_Texture* loadTexture(const string& path);
+    void renderTexture(const string& textureId, int x, int y, int width, int height);
+    void loadTextures();
+    void freeTextures();
     
     bool initSDL();
     void setCustomDifficulty(int);
