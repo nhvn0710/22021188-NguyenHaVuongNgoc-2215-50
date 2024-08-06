@@ -104,6 +104,15 @@
     <Image Include="..\resources\image\btton.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\resources\image\bttn1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\bttn2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\ldbbg.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\resources\mixer\button.mp3">

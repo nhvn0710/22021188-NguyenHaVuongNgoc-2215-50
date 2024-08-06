@@ -1,5 +1,6 @@
 0 Easy
 0 Easy
+0 Easy
 2 Easy
 3 Easy
 3 Easy
@@ -9,7 +10,6 @@
 5 Easy
 5 Easy
 6 Easy
+6 Easy
 7 Easy
 9 Easy
-10 Easy
-13 Easy

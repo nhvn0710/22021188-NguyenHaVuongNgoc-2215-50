@@ -52,13 +52,13 @@ void Game::saveHighScores() {
 
 
 bool Game::compareHighScores(const HighScore& a, const HighScore& b) {
-    int weightA = a.difficulty == DifficultyLevel::VERYHARD ? 1 : a.difficulty == DifficultyLevel::HARD ? 3 : a.difficulty == DifficultyLevel::MEDIUM ? 10 : 24;
-    int weightB = b.difficulty == DifficultyLevel::VERYHARD ? 1 : b.difficulty == DifficultyLevel::HARD ? 3 : b.difficulty == DifficultyLevel::MEDIUM ? 10 : 24;
+    int weightA = a.difficulty == DifficultyLevel::VERYHARD ? 1 : a.difficulty == DifficultyLevel::HARD ? 4 : a.difficulty == DifficultyLevel::MEDIUM ? 50 : 600;
+    int weightB = b.difficulty == DifficultyLevel::VERYHARD ? 1 : b.difficulty == DifficultyLevel::HARD ? 4 : b.difficulty == DifficultyLevel::MEDIUM ? 50 : 600;
     if (a.difficulty == DifficultyLevel::CUSTOM) {
-        weightA = 100;
+        weightA = 1000;
     }
     if (b.difficulty == DifficultyLevel::CUSTOM) {
-        weightB = 100;
+        weightB = 1000;
     }
     return a.time * weightA < b.time * weightB;
 }
@@ -66,7 +66,6 @@ bool Game::compareHighScores(const HighScore& a, const HighScore& b) {
 void Game::displayHighScores() {
     SDL_Color color = { 255, 255, 0, 255 };
     int yPosition = 100;
-    renderCenteredText("High Scores:", yPosition, color);
     yPosition += 30;
 
     for (const auto& score : highScores) {

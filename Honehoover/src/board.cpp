@@ -1,4 +1,4 @@
-#include "Board.h"
+#include "board.h"
 #include <random>
 #include <algorithm>
 #include <chrono>
@@ -11,7 +11,7 @@
 using namespace std;
 
 Board::Board(int width, int height, int mineCount)
-    : width(width), height(height), mineCount(mineCount), gameOver(false), firstReveal(false) { // Initialize firstReveal to false
+    : width(width), height(height), mineCount(mineCount), gameOver(false), firstReveal(false) {
     reset();
 }
 

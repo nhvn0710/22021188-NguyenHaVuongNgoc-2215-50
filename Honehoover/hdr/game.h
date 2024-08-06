@@ -1,3 +1,5 @@
+#ifndef GAME_H
+#define GAME_H
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
@@ -66,14 +68,14 @@ private:
     Mix_Music* loadMixerMusic(const string& path);
     Mix_Chunk* loadMixerChunk(const string& path);
     void loadMixers();
-    Mix_Music* backgroundMusic;
-    Mix_Music* gameplayMusic;
-	Mix_Music* leaderboardMusic;
-    Mix_Chunk* cellRevealSound; 
-    Mix_Chunk* flagToggleSound; 
-    Mix_Music* gameWinSound;
-    Mix_Music* gameLoseSound;
-    Mix_Chunk* buttonClickSound;
+    Mix_Music* backgroundMusic{};
+    Mix_Music* gameplayMusic{};
+	Mix_Music* leaderboardMusic{};
+    Mix_Chunk* cellRevealSound{}; 
+    Mix_Chunk* flagToggleSound{}; 
+    Mix_Music* gameWinSound{};
+    Mix_Music* gameLoseSound{};
+    Mix_Chunk* buttonClickSound{};
 
     bool initSDL();
     void setCustomDifficulty(int);
@@ -87,6 +89,8 @@ private:
     void renderText(const string& text, int x, int y, SDL_Color color);
     void renderCenteredText(const string& text, int y, SDL_Color color);
     void renderButton(const Button& button);
+    void renderBackButton(const Button& button);
+    void renderDifficultyButton(const Button& button);
     int getSliderPosition(int value);
     void renderSlider();
     bool isMouseOverButton(const Button& button, int mouseX, int mouseY);
@@ -116,8 +120,8 @@ private:
     Button highScoresButton;
 
     DifficultyLevel currentDifficulty;
-    Difficulty customDifficulty;
-    int sliderValue;
+    Difficulty customDifficulty{};
+    int sliderValue{};
 
     bool gameWon;
     int elapsedSeconds;
@@ -141,3 +145,4 @@ private:
     static const Difficulty difficulties[4];
 
 };
+#endif // GAME_H

@@ -5,18 +5,19 @@
 
 using namespace std;
 
-Game::Game() : gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0), window(nullptr), renderer(nullptr),
-               font(nullptr), currentState(GameState::MAIN_MENU), board(12, 9, 4), currentDifficulty()
+Game::Game() : window(nullptr), renderer(nullptr), font(nullptr), currentState(GameState::MAIN_MENU), board(12, 9, 4),
+               currentDifficulty(),
+               gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0)
 {
     loadHighScores();
 	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
 	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "        Quit  "};
-	backButton = {{20, SCREEN_HEIGHT+10, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2}, "Back"};
+    backButton = { {20, SCREEN_HEIGHT + 10, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2} };
 	newGameButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "New Game"};
-	easyButton = {{20, 150, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Easy"};
-	mediumButton = {{20, 200, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Medium"};
-    hardButton = { {20, 250, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Hard" };
-	veryhardButton = {{20, 300, BUTTON_WIDTH / 3, BUTTON_HEIGHT / 3}, "Very Hard"};
+	easyButton = {{0, 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Easy"};
+	mediumButton = {{-18 + 9*getDifficultySliderValue(DifficultyLevel::MEDIUM), 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Medium"};
+    hardButton = { {-18 + 9*getDifficultySliderValue(DifficultyLevel::HARD), 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Hard" };
+	veryhardButton = {{-18 + 9*getDifficultySliderValue(DifficultyLevel::VERYHARD), 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Very Hard"};
     highScoresButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT},"High Scores"};
 }
 
@@ -83,22 +84,18 @@ bool Game::initSDL() {
 }
 
 SDL_Texture* Game::loadTexture(const string& path) {
-    // Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load(path.c_str());
     if (loadedSurface == nullptr) {
         cout << "Unable to load image " << path << "! SDL_image Error: " << IMG_GetError() << endl;
         return nullptr;
     }
-
-    // Create texture from surface pixels
+    
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
     if (texture == nullptr) {
         cout << "Unable to create texture from " << path << "! SDL Error: " << SDL_GetError() << endl;
     }
-
-    // Get rid of old loaded surface
+    
     SDL_FreeSurface(loadedSurface);
-
     return texture;
 }
 
@@ -111,7 +108,10 @@ void Game::loadTextures() {
     textures["pylon"] = loadTexture("../resources/image/pylon.png");
     textures["steel"] = loadTexture("../resources/image/steel.png");
     textures["btton"] = loadTexture("../resources/image/btton.png");
+    textures["bttn1"] = loadTexture("../resources/image/bttn1.png");
+    textures["bttn2"] = loadTexture("../resources/image/bttn2.png");
     textures["mmnbg"] = loadTexture("../resources/image/mmnbg.png");
+    textures["ldbbg"] = loadTexture("../resources/image/ldbbg.png");
 }
 
 void Game::renderTexture(const string& textureId, int x, int y, int width, int height) {
@@ -190,7 +190,7 @@ void Game::handleEvents() {
             currentState = GameState::QUIT;
         }
         else if (e.type == SDL_MOUSEBUTTONDOWN) {
-            Mix_PlayChannel(-1, buttonClickSound, 0);  // Play button click sound effect
+            Mix_PlayChannel(-1, buttonClickSound, 0); 
 
             int mouseX, mouseY;
             SDL_GetMouseState(&mouseX, &mouseY);
@@ -209,7 +209,7 @@ void Game::handleEvents() {
                 else if (isMouseOverButton(veryhardButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::VERYHARD);
                 }
-                else if (mouseY >= 540 && mouseY <= 570) {
+                else if (mouseY >= 570 && mouseY <= 600) {
                     sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);
                     DifficultyLevel now = getCurrentDifficulty(sliderValue);
                     
@@ -274,6 +274,8 @@ void Game::handleEvents() {
                     currentState = GameState::MAIN_MENU;
                 }
                 break;
+            default: 
+                break;
             }
         }
     }
@@ -304,7 +306,7 @@ void Game::update() {
         if (!gameTimer.isStarted()) {
             gameTimer.start();
         }
-        elapsedSeconds = gameTimer.getElapsedTime() / 1000;
+        elapsedSeconds = static_cast<int>(gameTimer.getElapsedTime()) / 1000;
 
         // Update flag count
         remainingFlags = board.getMineCount() - board.getFlagCount();
@@ -378,6 +380,7 @@ void Game::cleanUp() {
     SDL_DestroyWindow(window);
     Mix_FreeMusic(backgroundMusic);
     Mix_FreeMusic(gameplayMusic);
+    Mix_FreeMusic(leaderboardMusic);
     Mix_FreeChunk(cellRevealSound);
     Mix_FreeChunk(flagToggleSound);
     Mix_FreeMusic(gameWinSound);
