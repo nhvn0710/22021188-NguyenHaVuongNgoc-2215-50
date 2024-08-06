@@ -56,18 +56,23 @@ private:
     };
 
     map<string, SDL_Texture*> textures;
+    
 
     SDL_Texture* loadTexture(const string& path);
     void renderTexture(const string& textureId, int x, int y, int width, int height);
     void loadTextures();
     void freeTextures();
 
-    void loadMixer();
-    Mix_Music* backgroundMusic; // Background music
-    Mix_Chunk* cellRevealSound; // Sound for revealing a cell
-    Mix_Chunk* flagToggleSound; // Sound for toggling a flag on a cell
-    Mix_Chunk* gameWinSound;    // Sound for winning the game
-    Mix_Chunk* gameLoseSound;   // Sound for losing the game
+    Mix_Music* loadMixerMusic(const string& path);
+    Mix_Chunk* loadMixerChunk(const string& path);
+    void loadMixers();
+    Mix_Music* backgroundMusic;
+    Mix_Music* gameplayMusic;
+	Mix_Music* leaderboardMusic;
+    Mix_Chunk* cellRevealSound; 
+    Mix_Chunk* flagToggleSound; 
+    Mix_Music* gameWinSound;
+    Mix_Music* gameLoseSound;
     Mix_Chunk* buttonClickSound;
 
     bool initSDL();

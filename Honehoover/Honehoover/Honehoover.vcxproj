@@ -57,7 +57,13 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\resources\mixer\button.mp3" />
+    <Media Include="..\resources\mixer\cellrevealsound.wav" />
+    <Media Include="..\resources\mixer\flagsound.wav" />
+    <Media Include="..\resources\mixer\losesound.wav" />
+    <Media Include="..\resources\mixer\song00.mp3" />
     <Media Include="..\resources\mixer\song01.mp3" />
+    <Media Include="..\resources\mixer\song03.mp3" />
+    <Media Include="..\resources\mixer\winsound.wav" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

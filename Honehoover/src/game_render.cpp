@@ -100,8 +100,8 @@ void Game::renderSlider() {
             difficultyText = to_string(difficulties[3].width) + "x" + to_string(difficulties[3].height) + " " + to_string(difficulties[3].mineCount) + " mines";
         }
     }
-    double tmpn = sliderHandle.x*((100-sliderValue)/500+0.8) + sliderHandle.w / 2 - 10;
-    renderText(difficultyText, tmpn, sliderHandle.y - 20, textColor);
+    double tmpn = sliderHandle.x * ((static_cast<double>(100) - sliderValue) / 500 + 0.8) + sliderHandle.w / static_cast<double>(2) - 10;
+    renderText(difficultyText, tmpn, sliderHandle.y - 30, textColor);
 }
 
 void Game::renderMainMenu() {
@@ -117,8 +117,9 @@ void Game::renderMainMenu() {
         SDL_RenderClear(renderer);
     }
     if (Mix_PlayingMusic() == 0) {
-        Mix_PlayMusic(backgroundMusic, -1);  // Loop the music infinitely
+        Mix_PlayMusic(backgroundMusic, -1);
     }
+    
 
     renderButton(startButton);
     renderButton(quitButton);
@@ -152,6 +153,10 @@ void Game::renderGameScreen() {
     board.render(renderer, font, SCREEN_WIDTH, SCREEN_HEIGHT, textures);
     renderButton(backButton);
 
+    if (Mix_PlayingMusic() == 0) {
+        Mix_PlayMusic(gameplayMusic, -1);
+    }
+
     SDL_Color textColor = { 0, 0, 0, 255 };
     string timeText = "Time: " + to_string(elapsedSeconds) + " s";
     renderText(timeText, SCREEN_WIDTH - 360, TRUE_SCREEN_HEIGHT - 40, textColor);
@@ -179,7 +184,6 @@ void Game::renderWinScreen() {
 
     string timeText = "Time: " + to_string(finalTime) + " seconds";
     renderText(timeText, SCREEN_WIDTH / 2 - 100, 200, textColor);
-
     renderButton(newGameButton);
     renderButton(backButton);
     string victoryMessage = "You cleared all mines! Well done!";
@@ -193,11 +197,12 @@ void Game::renderHighScoreScreen() {
     SDL_Color titleColor = { 255, 255, 255, 255 }; 
     renderCenteredText("High Scores", 50, titleColor);
 
+    if (Mix_PlayingMusic() == 0) {
+        Mix_PlayMusic(leaderboardMusic, -1);
+    }
 
     displayHighScores();
-
     renderButton(backButton);
-
     SDL_RenderPresent(renderer);
 }
 

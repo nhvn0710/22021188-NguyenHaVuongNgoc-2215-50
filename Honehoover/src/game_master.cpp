@@ -70,7 +70,7 @@ bool Game::initSDL() {
     }
 
     loadTextures();
-    loadMixer();
+    loadMixers();
 
     if (window == nullptr || renderer == nullptr || font == nullptr) {
         printf("Failed to load SDL components: %s\n", SDL_GetError());
@@ -134,18 +134,38 @@ void Game::freeTextures() {
     }
 }
 
-void Game::loadMixer()
+Mix_Music* Game::loadMixerMusic(const string& path)
 {
-	backgroundMusic = Mix_LoadMUS("../resources/mixer/song01.mp3");
-	cellRevealSound = Mix_LoadWAV("../resources/mixer/button.mp3");
-	flagToggleSound = Mix_LoadWAV("../resources/mixer/button.mp3");
-	gameWinSound = Mix_LoadWAV("../resources/mixer/button.mp3");
-	gameLoseSound = Mix_LoadWAV("../resources/mixer/button.mp3");
-	buttonClickSound = Mix_LoadWAV("../resources/mixer/button.mp3");
+    Mix_Music* loadedMusic = Mix_LoadMUS(path.c_str());
+    if (loadedMusic == nullptr) {
+        cout << "Unable to load music " << path << "! SDL_mixer Error: " << Mix_GetError() << endl;
+        return nullptr;
+    }
 
-	if (!backgroundMusic || !cellRevealSound || !flagToggleSound || !gameWinSound || !gameLoseSound || !buttonClickSound) {
-		printf("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
-	}
+    return loadedMusic;
+}
+
+Mix_Chunk* Game::loadMixerChunk(const string& path)
+{
+    Mix_Chunk* loadedChunk = Mix_LoadWAV(path.c_str());
+    if (loadedChunk == nullptr) {
+        cout << "Unable to load chunk " << path << "! SDL_mixer Error: " << Mix_GetError() << endl;
+        return nullptr;
+    }
+
+    return loadedChunk;
+}
+
+void Game::loadMixers()
+{
+	backgroundMusic = loadMixerMusic("../resources/mixer/song03.mp3");
+    gameplayMusic = loadMixerMusic("../resources/mixer/song01.mp3");
+    leaderboardMusic = loadMixerMusic("../resources/mixer/song00.mp3");
+	cellRevealSound = loadMixerChunk("../resources/mixer/cellrevealsound.wav");
+	flagToggleSound = loadMixerChunk("../resources/mixer/flagsound.wav");
+	gameWinSound = loadMixerMusic("../resources/mixer/winsound.wav");
+	gameLoseSound = loadMixerMusic("../resources/mixer/losesound.wav");
+	buttonClickSound = loadMixerChunk("../resources/mixer/button.mp3");
 }
 
 void Game::run() {
@@ -206,48 +226,51 @@ void Game::handleEvents() {
                 	setDifficulty(now);
                 }
                 else if (isMouseOverButton(startButton, mouseX, mouseY)) {
+                    Mix_HaltMusic();
                     currentState = GameState::PLAYING;
                 }
                 else if (isMouseOverButton(highScoresButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
-                    currentState = GameState::VIEW_HIGH_SCORES;
+                    Mix_HaltMusic();
+                	currentState = GameState::VIEW_HIGH_SCORES;
                 }
                 else if (isMouseOverButton(quitButton, mouseX, mouseY)) {
-                    currentState = GameState::QUIT;
+                    Mix_HaltMusic();
+                	currentState = GameState::QUIT;
                 }
                 break;
             case GameState::VIEW_HIGH_SCORES: {
                     if (isMouseOverButton(backButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
-                        currentState = GameState::MAIN_MENU;
+                        Mix_HaltMusic();
+                    	currentState = GameState::MAIN_MENU;
                     }
                 }
                 break;
             case GameState::PLAYING:
                 if (isMouseOverButton(backButton, mouseX, mouseY)) {
-                    currentState = GameState::MAIN_MENU;
+                    Mix_HaltMusic();
+                	currentState = GameState::MAIN_MENU;
                 }
                 else {
                     int cellX = mouseX / (SCREEN_WIDTH / board.getWidth());
                     int cellY = mouseY / (SCREEN_HEIGHT / board.getHeight());
                     if (e.button.button == SDL_BUTTON_LEFT) {
                         if (board.revealCell(cellX, cellY)) {
-                            Mix_PlayChannel(-1, cellRevealSound, 0); Mix_PlayChannel(-1, cellRevealSound, 0);
-                            if (board.isGameOver()) {
-                                currentState = GameState::GAME_OVER;
-                                gameWon = false;
-                                board.revealAllMines();
-                            }
+                            Mix_PlayChannel(-1, cellRevealSound, 0);
                         }
                     }
                     else if (e.button.button == SDL_BUTTON_RIGHT) {
+                        Mix_PlayChannel(-1, flagToggleSound, 0);
                         board.toggleFlag(cellX, cellY);
                     }
                 }
                 break;
             case GameState::GAME_OVER:
                 if (isMouseOverButton(newGameButton, mouseX, mouseY)) {
+                    Mix_HaltMusic();
                     resetGame();
                 }
                 else if (isMouseOverButton(backButton, mouseX, mouseY)) {
+                    Mix_HaltMusic();
                     currentState = GameState::MAIN_MENU;
                 }
                 break;
@@ -260,20 +283,20 @@ void Game::update() {
     if (currentState == GameState::PLAYING) {
         // Check for win condition
         if (board.isGameWon()) {
+        	Mix_PlayMusic(gameWinSound, 0);
             currentState = GameState::GAME_OVER;
             gameWon = true;
             gameTimer.stop();
             finalTime = elapsedSeconds;
-            Mix_PlayChannel(-1, gameWinSound, 0);
             updateHighScores();
         }
 
         // Check for lose condition
         if (board.isGameOver()) {
+            Mix_PlayMusic(gameLoseSound, 0);
             currentState = GameState::GAME_OVER;
             gameWon = false;
             board.revealAllMines();
-            Mix_PlayChannel(-1, gameLoseSound, 0);
             gameTimer.stop();
         }
 
@@ -335,7 +358,7 @@ void Game::setCustomDifficulty(int sliderVal)
         width = 40;
         height = 30;
     }
-    int mineCount = 4 + sliderVal * (0.5 + (static_cast<double>(sliderVal) * sliderVal) / 2000);
+    int mineCount = static_cast<int>(4 + sliderVal * (0.5 + (static_cast<double>(sliderVal) * sliderVal) / 2000));
     customDifficulty = { width, height, mineCount, true };
 }
 
@@ -354,10 +377,11 @@ void Game::cleanUp() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     Mix_FreeMusic(backgroundMusic);
+    Mix_FreeMusic(gameplayMusic);
     Mix_FreeChunk(cellRevealSound);
     Mix_FreeChunk(flagToggleSound);
-    Mix_FreeChunk(gameWinSound);
-    Mix_FreeChunk(gameLoseSound);
+    Mix_FreeMusic(gameWinSound);
+    Mix_FreeMusic(gameLoseSound);
     Mix_FreeChunk(buttonClickSound);
     IMG_Quit();
     TTF_Quit();
