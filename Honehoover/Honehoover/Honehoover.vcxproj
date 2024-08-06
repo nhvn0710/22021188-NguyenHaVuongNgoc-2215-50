@@ -24,12 +24,13 @@
   <ItemGroup>
     <ClCompile Include="..\src\board.cpp" />
     <ClCompile Include="..\src\cell.cpp" />
-    <ClCompile Include="..\src\game_getter.cpp" />
-    <ClCompile Include="..\src\game_master.cpp" />
-    <ClCompile Include="..\src\game_render.cpp" />
-    <ClCompile Include="..\src\game_scores.cpp" />
+    <ClCompile Include="..\src\getset.cpp" />
+    <ClCompile Include="..\src\game.cpp" />
+    <ClCompile Include="..\src\render.cpp" />
+    <ClCompile Include="..\src\scores.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\timer.cpp" />
+    <ClCompile Include="init.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\hdr\board.h" />
@@ -39,9 +40,7 @@
     <ClInclude Include="..\hdr\timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\resources\font\JosefinSlab-Regular.ttf" />
-    <Font Include="..\resources\font\QX_LatypeSans.ttf" />
-    <Font Include="..\resources\font\Restore-W00-Heavy.ttf" />
+    <Font Include="..\resources\font\SmashSans-Metaverse.otf" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\resources\image\antiq.png" />

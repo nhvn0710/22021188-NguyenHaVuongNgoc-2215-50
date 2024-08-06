@@ -6,12 +6,12 @@
 using namespace std;
 
 Game::Game() : window(nullptr), renderer(nullptr), font(nullptr), currentState(GameState::MAIN_MENU), board(12, 9, 4),
-               currentDifficulty(),
-               gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0)
+               currentDifficulty(), gameWon(false),
+               elapsedSeconds(0), finalTime(0), remainingFlags(0), isNewHighScore(false)
 {
     loadHighScores();
 	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
-	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "        Quit  "};
+	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "      Quit   "};
     backButton = { {20, SCREEN_HEIGHT + 10, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2} };
 	newGameButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "New Game"};
 	easyButton = {{0, 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Easy"};
@@ -64,14 +64,11 @@ bool Game::initSDL() {
         return false;
     }
 
-    font = TTF_OpenFont("../resources/font/Restore-W00-Heavy.ttf", 24);
+    font = TTF_OpenFont("../resources/font/SmashSans-Metaverse.otf", 34);
     if (font == nullptr) {
         printf("Failed to load font! TTF_Error: %s\n", TTF_GetError());
         return false;
     }
-
-    loadTextures();
-    loadMixers();
 
     if (window == nullptr || renderer == nullptr || font == nullptr) {
         printf("Failed to load SDL components: %s\n", SDL_GetError());
@@ -80,92 +77,10 @@ bool Game::initSDL() {
         exit(1);
     }
 
+    loadTextures();
+    loadMixers();
+
     return true;
-}
-
-SDL_Texture* Game::loadTexture(const string& path) {
-    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-    if (loadedSurface == nullptr) {
-        cout << "Unable to load image " << path << "! SDL_image Error: " << IMG_GetError() << endl;
-        return nullptr;
-    }
-    
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-    if (texture == nullptr) {
-        cout << "Unable to create texture from " << path << "! SDL Error: " << SDL_GetError() << endl;
-    }
-    
-    SDL_FreeSurface(loadedSurface);
-    return texture;
-}
-
-void Game::loadTextures() {
-    textures["antiq"] = loadTexture("../resources/image/antiq.png");
-    textures["cross"] = loadTexture("../resources/image/cross.png");
-    textures["frame"] = loadTexture("../resources/image/frame.png");
-    textures["grass"] = loadTexture("../resources/image/grass.png");
-	textures["clean"] = loadTexture("../resources/image/clean.png");
-    textures["pylon"] = loadTexture("../resources/image/pylon.png");
-    textures["steel"] = loadTexture("../resources/image/steel.png");
-    textures["btton"] = loadTexture("../resources/image/btton.png");
-    textures["bttn1"] = loadTexture("../resources/image/bttn1.png");
-    textures["bttn2"] = loadTexture("../resources/image/bttn2.png");
-    textures["mmnbg"] = loadTexture("../resources/image/mmnbg.png");
-    textures["ldbbg"] = loadTexture("../resources/image/ldbbg.png");
-}
-
-void Game::renderTexture(const string& textureId, int x, int y, int width, int height) {
-    if (textures.find(textureId) == textures.end()) {
-        cout << "Texture " << textureId << " not found!" << endl;
-        return;
-    }
-
-    SDL_Rect renderQuad = { x, y, width, height };
-
-    SDL_RenderCopy(renderer, textures[textureId], nullptr, &renderQuad);
-}
-
-void Game::freeTextures() {
-    for (auto& texture : textures) {
-        if (texture.second != nullptr) {
-            SDL_DestroyTexture(texture.second);
-            texture.second = nullptr;
-        }
-    }
-}
-
-Mix_Music* Game::loadMixerMusic(const string& path)
-{
-    Mix_Music* loadedMusic = Mix_LoadMUS(path.c_str());
-    if (loadedMusic == nullptr) {
-        cout << "Unable to load music " << path << "! SDL_mixer Error: " << Mix_GetError() << endl;
-        return nullptr;
-    }
-
-    return loadedMusic;
-}
-
-Mix_Chunk* Game::loadMixerChunk(const string& path)
-{
-    Mix_Chunk* loadedChunk = Mix_LoadWAV(path.c_str());
-    if (loadedChunk == nullptr) {
-        cout << "Unable to load chunk " << path << "! SDL_mixer Error: " << Mix_GetError() << endl;
-        return nullptr;
-    }
-
-    return loadedChunk;
-}
-
-void Game::loadMixers()
-{
-	backgroundMusic = loadMixerMusic("../resources/mixer/song03.mp3");
-    gameplayMusic = loadMixerMusic("../resources/mixer/song01.mp3");
-    leaderboardMusic = loadMixerMusic("../resources/mixer/song00.mp3");
-	cellRevealSound = loadMixerChunk("../resources/mixer/cellrevealsound.wav");
-	flagToggleSound = loadMixerChunk("../resources/mixer/flagsound.wav");
-	gameWinSound = loadMixerMusic("../resources/mixer/winsound.wav");
-	gameLoseSound = loadMixerMusic("../resources/mixer/losesound.wav");
-	buttonClickSound = loadMixerChunk("../resources/mixer/button.mp3");
 }
 
 void Game::run() {
@@ -199,17 +114,21 @@ void Game::handleEvents() {
             case GameState::MAIN_MENU:
                 if (isMouseOverButton(easyButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::EASY);
+                    sliderValue = getDifficultySliderValue(DifficultyLevel::EASY);
                 }
                 else if (isMouseOverButton(mediumButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::MEDIUM);
+                    sliderValue = getDifficultySliderValue(DifficultyLevel::MEDIUM);
                 }
                 else if (isMouseOverButton(hardButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::HARD);
+                    sliderValue = getDifficultySliderValue(DifficultyLevel::HARD);
                 }
                 else if (isMouseOverButton(veryhardButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::VERYHARD);
+                    sliderValue = getDifficultySliderValue(DifficultyLevel::VERYHARD);
                 }
-                else if (mouseY >= 570 && mouseY <= 600) {
+                else if (mouseY >= SLIDER_YPOSITION && mouseY <= SLIDER_YPOSITION+30) {
                     sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);
                     DifficultyLevel now = getCurrentDifficulty(sliderValue);
                     
@@ -311,57 +230,6 @@ void Game::update() {
         // Update flag count
         remainingFlags = board.getMineCount() - board.getFlagCount();
     }
-}
-
-
-
-void Game::setDifficulty(DifficultyLevel level) {
-    switch (level) {
-    case DifficultyLevel::EASY:
-        board = Board(12, 9, 4);
-        break;
-    case DifficultyLevel::MEDIUM:
-        board = Board(20, 15, 20);
-        break;
-    case DifficultyLevel::HARD:
-        board = Board(24, 18, 90);
-        break;
-    case DifficultyLevel::VERYHARD:
-        board = Board(30, 24, 184);
-        break;
-    case DifficultyLevel::CUSTOM:
-        board = Board(customDifficulty.width, customDifficulty.height, customDifficulty.mineCount);
-        if (customDifficulty == difficulties[0]) { //0
-            currentDifficulty = DifficultyLevel::EASY;
-        }
-        else if (customDifficulty == difficulties[1]) { //32
-            currentDifficulty = DifficultyLevel::MEDIUM;
-        }
-        else if (customDifficulty == difficulties[2]) { //50
-            currentDifficulty = DifficultyLevel::HARD;
-        }
-        else if (customDifficulty == difficulties[3]) { //72
-            currentDifficulty = DifficultyLevel::VERYHARD;
-        }
-        else {
-            currentDifficulty = DifficultyLevel::CUSTOM;
-        }
-        break;
-    }
-    currentDifficulty = level;
-}
-
-void Game::setCustomDifficulty(int sliderVal)
-{
-    int width = 12 + sliderVal * 5 / 20;
-    int height = 9 + sliderVal * 5 / 24;
-    if (sliderVal==100)
-    {
-        width = 40;
-        height = 30;
-    }
-    int mineCount = static_cast<int>(4 + sliderVal * (0.5 + (static_cast<double>(sliderVal) * sliderVal) / 2000));
-    customDifficulty = { width, height, mineCount, true };
 }
 
 void Game::resetGame() {

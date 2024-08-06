@@ -21,6 +21,16 @@ public:
     void resetGame();
 
 private:
+    static const int SCREEN_WIDTH = 960;
+    static const int SCREEN_HEIGHT = 720;
+    static const int NAVIGATE_HEIGHT = 60;
+    static const int TRUE_SCREEN_HEIGHT = SCREEN_HEIGHT + NAVIGATE_HEIGHT;
+    static const int BUTTON_WIDTH = 300;
+    static const int BUTTON_HEIGHT = 100;
+    static const int HIGHSCORE_COUNT = 15;
+    static const int SLIDER_YPOSITION = 570;
+
+
     enum class GameState {
         MAIN_MENU,
         PLAYING,
@@ -58,8 +68,6 @@ private:
     };
 
     map<string, SDL_Texture*> textures;
-    
-
     SDL_Texture* loadTexture(const string& path);
     void renderTexture(const string& textureId, int x, int y, int width, int height);
     void loadTextures();
@@ -119,6 +127,7 @@ private:
     Button veryhardButton;
     Button highScoresButton;
 
+    static const Difficulty difficulties[4];
     DifficultyLevel currentDifficulty;
     Difficulty customDifficulty{};
     int sliderValue{};
@@ -135,14 +144,7 @@ private:
     void saveHighScores();
     void displayHighScores();
     static bool compareHighScores(const HighScore& a, const HighScore& b);
-
-    static const int SCREEN_WIDTH = 960;
-    static const int SCREEN_HEIGHT = 720;
-    static const int NAVIGATE_HEIGHT = 60;
-    static const int TRUE_SCREEN_HEIGHT = SCREEN_HEIGHT+NAVIGATE_HEIGHT;
-    static const int BUTTON_WIDTH = 300;
-    static const int BUTTON_HEIGHT = 100;
-    static const Difficulty difficulties[4];
+    bool isNewHighScore;
 
 };
 #endif // GAME_H
