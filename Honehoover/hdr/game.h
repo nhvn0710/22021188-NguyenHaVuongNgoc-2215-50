@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 #include <string>
 #include <map>
 
@@ -60,7 +61,15 @@ private:
     void renderTexture(const string& textureId, int x, int y, int width, int height);
     void loadTextures();
     void freeTextures();
-    
+
+    void loadMixer();
+    Mix_Music* backgroundMusic; // Background music
+    Mix_Chunk* cellRevealSound; // Sound for revealing a cell
+    Mix_Chunk* flagToggleSound; // Sound for toggling a flag on a cell
+    Mix_Chunk* gameWinSound;    // Sound for winning the game
+    Mix_Chunk* gameLoseSound;   // Sound for losing the game
+    Mix_Chunk* buttonClickSound;
+
     bool initSDL();
     void setCustomDifficulty(int);
     int getDifficultySliderValue(DifficultyLevel);

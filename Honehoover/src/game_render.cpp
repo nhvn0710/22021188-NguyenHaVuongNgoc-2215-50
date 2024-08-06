@@ -116,6 +116,9 @@ void Game::renderMainMenu() {
         SDL_SetRenderDrawColor(renderer, 0xAA, 0xFF, 0xDD, 255);
         SDL_RenderClear(renderer);
     }
+    if (Mix_PlayingMusic() == 0) {
+        Mix_PlayMusic(backgroundMusic, -1);  // Loop the music infinitely
+    }
 
     renderButton(startButton);
     renderButton(quitButton);

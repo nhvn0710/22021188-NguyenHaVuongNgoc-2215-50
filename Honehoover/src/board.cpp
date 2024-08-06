@@ -75,6 +75,7 @@ int Board::countAdjacentMines(int x, int y) const {
 }
 
 bool Board::revealCell(int x, int y) {
+
     if (x < 0 || x >= width || y < 0 || y >= height || cells[y][x].isRevealed() || cells[y][x].isFlagged()) {
         return false;
     }

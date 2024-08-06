@@ -46,6 +46,11 @@ bool Game::initSDL() {
         return false;
     }
 
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+        return false;
+    }
+
     window = SDL_CreateWindow("Honehoover", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == nullptr) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -65,6 +70,7 @@ bool Game::initSDL() {
     }
 
     loadTextures();
+    loadMixer();
 
     if (window == nullptr || renderer == nullptr || font == nullptr) {
         printf("Failed to load SDL components: %s\n", SDL_GetError());
@@ -120,13 +126,26 @@ void Game::renderTexture(const string& textureId, int x, int y, int width, int h
 }
 
 void Game::freeTextures() {
-    // Free texture resources.
     for (auto& texture : textures) {
         if (texture.second != nullptr) {
             SDL_DestroyTexture(texture.second);
             texture.second = nullptr;
         }
     }
+}
+
+void Game::loadMixer()
+{
+	backgroundMusic = Mix_LoadMUS("../resources/mixer/song01.mp3");
+	cellRevealSound = Mix_LoadWAV("../resources/mixer/button.mp3");
+	flagToggleSound = Mix_LoadWAV("../resources/mixer/button.mp3");
+	gameWinSound = Mix_LoadWAV("../resources/mixer/button.mp3");
+	gameLoseSound = Mix_LoadWAV("../resources/mixer/button.mp3");
+	buttonClickSound = Mix_LoadWAV("../resources/mixer/button.mp3");
+
+	if (!backgroundMusic || !cellRevealSound || !flagToggleSound || !gameWinSound || !gameLoseSound || !buttonClickSound) {
+		printf("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+	}
 }
 
 void Game::run() {
@@ -151,6 +170,8 @@ void Game::handleEvents() {
             currentState = GameState::QUIT;
         }
         else if (e.type == SDL_MOUSEBUTTONDOWN) {
+            Mix_PlayChannel(-1, buttonClickSound, 0);  // Play button click sound effect
+
             int mouseX, mouseY;
             SDL_GetMouseState(&mouseX, &mouseY);
 
@@ -209,6 +230,7 @@ void Game::handleEvents() {
                     int cellY = mouseY / (SCREEN_HEIGHT / board.getHeight());
                     if (e.button.button == SDL_BUTTON_LEFT) {
                         if (board.revealCell(cellX, cellY)) {
+                            Mix_PlayChannel(-1, cellRevealSound, 0); Mix_PlayChannel(-1, cellRevealSound, 0);
                             if (board.isGameOver()) {
                                 currentState = GameState::GAME_OVER;
                                 gameWon = false;
@@ -242,6 +264,7 @@ void Game::update() {
             gameWon = true;
             gameTimer.stop();
             finalTime = elapsedSeconds;
+            Mix_PlayChannel(-1, gameWinSound, 0);
             updateHighScores();
         }
 
@@ -250,6 +273,7 @@ void Game::update() {
             currentState = GameState::GAME_OVER;
             gameWon = false;
             board.revealAllMines();
+            Mix_PlayChannel(-1, gameLoseSound, 0);
             gameTimer.stop();
         }
 
@@ -329,7 +353,14 @@ void Game::cleanUp() {
     TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    Mix_FreeMusic(backgroundMusic);
+    Mix_FreeChunk(cellRevealSound);
+    Mix_FreeChunk(flagToggleSound);
+    Mix_FreeChunk(gameWinSound);
+    Mix_FreeChunk(gameLoseSound);
+    Mix_FreeChunk(buttonClickSound);
     IMG_Quit();
     TTF_Quit();
+    Mix_Quit();
     SDL_Quit();
 }
