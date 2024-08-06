@@ -6,8 +6,8 @@
 using namespace std;
 
 Game::Game() : window(nullptr), renderer(nullptr), font(nullptr), currentState(GameState::MAIN_MENU), board(12, 9, 4),
-               currentDifficulty(),
-               gameWon(false), elapsedSeconds(0), finalTime(0), remainingFlags(0)
+               currentDifficulty(), gameWon(false),
+               elapsedSeconds(0), finalTime(0), remainingFlags(0), isNewHighScore(false)
 {
     loadHighScores();
 	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
@@ -114,15 +114,19 @@ void Game::handleEvents() {
             case GameState::MAIN_MENU:
                 if (isMouseOverButton(easyButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::EASY);
+                    sliderValue = getDifficultySliderValue(DifficultyLevel::EASY);
                 }
                 else if (isMouseOverButton(mediumButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::MEDIUM);
+                    sliderValue = getDifficultySliderValue(DifficultyLevel::MEDIUM);
                 }
                 else if (isMouseOverButton(hardButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::HARD);
+                    sliderValue = getDifficultySliderValue(DifficultyLevel::HARD);
                 }
                 else if (isMouseOverButton(veryhardButton, mouseX, mouseY)) {
                     setDifficulty(DifficultyLevel::VERYHARD);
+                    sliderValue = getDifficultySliderValue(DifficultyLevel::VERYHARD);
                 }
                 else if (mouseY >= SLIDER_YPOSITION && mouseY <= SLIDER_YPOSITION+30) {
                     sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);

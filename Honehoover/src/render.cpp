@@ -201,13 +201,18 @@ void Game::renderWinScreen() {
     SDL_RenderClear(renderer);
 
     SDL_Color textColor = { 0, 0, 0, 255 };
-
     string timeText = "Time: " + to_string(finalTime) + " seconds";
     renderText(timeText, SCREEN_WIDTH / 2 - 100, 200, textColor);
     renderButton(newGameButton);
     renderBackButton(backButton);
     string victoryMessage = "You cleared all mines! Well done!";
     renderCenteredText(victoryMessage, TRUE_SCREEN_HEIGHT / 2 + 50, textColor);
+
+    if (isNewHighScore) {
+        textColor = { 255, 255, 0, 255 };
+        string highScoreText = "New High Score!";
+        renderCenteredText(highScoreText, TRUE_SCREEN_HEIGHT / 2 + 100, textColor);
+    }
 }
 
 void Game::renderHighScoreScreen() {

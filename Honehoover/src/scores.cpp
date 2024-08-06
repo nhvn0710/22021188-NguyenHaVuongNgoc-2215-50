@@ -29,6 +29,11 @@ void Game::updateHighScores() {
         newScore.time = finalTime;
         newScore.difficulty = currentDifficulty;
 
+        isNewHighScore = (find_if(highScores.begin(), highScores.end(),
+            [this](const HighScore& score) {
+                return (score.time == finalTime && score.difficulty == currentDifficulty);
+            }) == highScores.end());
+
         highScores.push_back(newScore);
         sort(highScores.begin(), highScores.end(), compareHighScores);
 
@@ -39,6 +44,7 @@ void Game::updateHighScores() {
         saveHighScores();
     }
 }
+
 
 void Game::saveHighScores() {
     ofstream outFile("highscores.txt");
@@ -55,11 +61,14 @@ bool Game::compareHighScores(const HighScore& a, const HighScore& b) {
     int weightB = b.difficulty == DifficultyLevel::VERYHARD ? 1 : b.difficulty == DifficultyLevel::HARD ? 4 : b.difficulty == DifficultyLevel::MEDIUM ? 50 : 600;
     if (a.difficulty == DifficultyLevel::CUSTOM) {
         weightA = 1000;
+        // 0     32    50    72   100
+        // 100   68    50    28   0
+        // 6000  500   40    10   1   
     }
     if (b.difficulty == DifficultyLevel::CUSTOM) {
         weightB = 1000;
     }
-    return a.time * weightA < b.time * weightB;
+    return ((a.difficulty == DifficultyLevel::EASY) ? a.time + 10 : a.time) * weightA < ((b.difficulty == DifficultyLevel::EASY) ? b.time + 10 : b.time) * weightB;
 }
 
 void Game::displayHighScores() {

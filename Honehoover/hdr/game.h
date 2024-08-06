@@ -144,6 +144,7 @@ private:
     void saveHighScores();
     void displayHighScores();
     static bool compareHighScores(const HighScore& a, const HighScore& b);
+    bool isNewHighScore;
 
 };
 #endif // GAME_H
