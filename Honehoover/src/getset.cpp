@@ -15,19 +15,19 @@ int Game::getSliderPosition(int value) {
     int veryhardPos = sliderStart + (getDifficultySliderValue(DifficultyLevel::VERYHARD) * sliderMaxPos / 100);
 
     int customPos = sliderStart + (value * sliderMaxPos / 100);
-    if (abs(customPos - easyPos) < 10) customPos = easyPos;
-    if (abs(customPos - mediumPos) < 10) customPos = mediumPos;
-    if (abs(customPos - hardPos) < 10) customPos = hardPos;
-    if (abs(customPos - veryhardPos) < 10) customPos = veryhardPos;
+    if (abs(customPos - easyPos) < 5) customPos = easyPos;
+    if (abs(customPos - mediumPos) < 5) customPos = mediumPos;
+    if (abs(customPos - hardPos) < 5) customPos = hardPos;
+    if (abs(customPos - veryhardPos) < 5) customPos = veryhardPos;
 
     return customPos;
 }
 
 const Game::Difficulty Game::difficulties[] = {
     { 12, 9, 4 },
-    { 20, 15, 20 },
+    { 20, 15, 36 },
     { 24, 18, 90 },
-    { 30, 24, 184 }
+    { 30, 24, 226 }
 };
 
 int Game::getDifficultySliderValue(DifficultyLevel level) {
@@ -76,4 +76,55 @@ string Game::difficultyToString(DifficultyLevel level) {
     default:
         return "Unknown Difficulty";
     }
+}
+
+
+
+void Game::setDifficulty(DifficultyLevel level) {
+    switch (level) {
+    case DifficultyLevel::EASY:
+        board = Board(difficulties[0].width, difficulties[0].height, difficulties[0].mineCount);
+        break;
+    case DifficultyLevel::MEDIUM:
+        board = Board(difficulties[1].width, difficulties[1].height, difficulties[1].mineCount);
+        break;
+    case DifficultyLevel::HARD:
+        board = Board(difficulties[2].width, difficulties[2].height, difficulties[2].mineCount);
+        break;
+    case DifficultyLevel::VERYHARD:
+        board = Board(difficulties[3].width, difficulties[3].height, difficulties[3].mineCount);
+        break;
+    case DifficultyLevel::CUSTOM:
+        board = Board(customDifficulty.width, customDifficulty.height, customDifficulty.mineCount);
+        if (customDifficulty == difficulties[0]) { //0
+            currentDifficulty = DifficultyLevel::EASY;
+        }
+        else if (customDifficulty == difficulties[1]) { //32
+            currentDifficulty = DifficultyLevel::MEDIUM;
+        }
+        else if (customDifficulty == difficulties[2]) { //50
+            currentDifficulty = DifficultyLevel::HARD;
+        }
+        else if (customDifficulty == difficulties[3]) { //72
+            currentDifficulty = DifficultyLevel::VERYHARD;
+        }
+        else {
+            currentDifficulty = DifficultyLevel::CUSTOM;
+        }
+        break;
+    }
+    currentDifficulty = level;
+}
+
+void Game::setCustomDifficulty(int sliderVal)
+{
+    int width = difficulties[0].width + sliderVal * 5 / 20;
+    int height = difficulties[0].height + sliderVal * 5 / 24;
+    if (sliderVal == 100)
+    {
+        width = 40;
+        height = 30;
+    }
+    int mineCount = static_cast<int>(difficulties[0].mineCount + sliderVal * (0.5 + (static_cast<double>(sliderVal) * sliderVal) / 2000));
+    customDifficulty = { width, height, mineCount, true };
 }

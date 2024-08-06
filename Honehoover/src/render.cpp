@@ -91,10 +91,9 @@ void Game::renderDifficultyButton(const Button& button) {
     SDL_Color textColor = { 0, 0, 0, 255 };
 }
 
-
 void Game::renderSlider() {
-    SDL_Rect sliderBar = { 20, 580, SCREEN_WIDTH - 40, 10 };
-    SDL_Rect sliderHandle = { getSliderPosition(sliderValue), 570, 20, 30 };
+    SDL_Rect sliderBar = { 20, SLIDER_YPOSITION+10, SCREEN_WIDTH - 40, 10 };
+    SDL_Rect sliderHandle = { getSliderPosition(sliderValue), SLIDER_YPOSITION, 20, 30 };
 
     SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
     SDL_RenderFillRect(renderer, &sliderBar);
@@ -124,9 +123,11 @@ void Game::renderSlider() {
             difficultyText = to_string(difficulties[3].width) + "x" + to_string(difficulties[3].height) + " " + to_string(difficulties[3].mineCount) + " mines";
         }
     }
-    double tmpn = sliderHandle.x * ((static_cast<double>(100) - sliderValue) / 500 + 0.8) + sliderHandle.w / static_cast<double>(2) - 10;
+    double tmpn = sliderHandle.x * ((static_cast<double>(100) - sliderValue) / 500 + 0.8) + sliderHandle.w / static_cast<double>(2) - 28;
     renderText(difficultyText, static_cast<int>(tmpn), sliderHandle.y - 30, textColor);
 }
+
+
 
 void Game::renderMainMenu() {
     SDL_Texture* backgroundTexture = textures["mmnbg"];
@@ -151,14 +152,13 @@ void Game::renderMainMenu() {
     renderDifficultyButton(veryhardButton);
     renderSlider();
 
-    SDL_Color titleColor = { 0, 0, 0, 255 };
+    SDL_Color titleColor = { 225, 96, 0, 255 };
     renderText("Honehoover", SCREEN_WIDTH / 2 - 100, 100, titleColor);
     renderButton(highScoresButton);
     SDL_Color difficultyColor = { 0, 0, 0, 255 };
     string difficultyText = "Difficulty: " + difficultyToString(currentDifficulty);
     renderCenteredText(difficultyText, startButton.rect.y - 50, difficultyColor);
 }
-
 
 void Game::renderGameScreen() {
     SDL_Texture* backgroundTexture = textures["mmnbg"];
@@ -177,7 +177,7 @@ void Game::renderGameScreen() {
         Mix_PlayMusic(gameplayMusic, -1);
     }
 
-    SDL_Color textColor = { 0, 0, 0, 255 };
+    SDL_Color textColor = { 50, 255, 50, 255 };
     string timeText = "Time: " + to_string(elapsedSeconds) + " s";
     renderText(timeText, SCREEN_WIDTH - 360, TRUE_SCREEN_HEIGHT - 40, textColor);
 
