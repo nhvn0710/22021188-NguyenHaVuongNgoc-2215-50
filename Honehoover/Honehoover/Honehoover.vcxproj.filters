@@ -74,11 +74,70 @@
     </Font>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\resources\image\flag.png">
+    <Image Include="..\resources\image\antiq.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="..\resources\image\mine.png">
+    <Image Include="..\resources\image\cross.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\resources\image\frame.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\pylon.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\steel.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\clean.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\crtal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\mmnbg.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\btton.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\bttn1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\bttn2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\ldbbg.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\resources\mixer\button.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\resources\mixer\song01.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\resources\mixer\song00.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\resources\mixer\cellrevealsound.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\resources\mixer\flagsound.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\resources\mixer\losesound.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\resources\mixer\winsound.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\resources\mixer\song03.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

@@ -12,11 +12,13 @@ int Game::getSliderPosition(int value) {
     int easyPos = sliderStart + (getDifficultySliderValue(DifficultyLevel::EASY) * sliderMaxPos / 100);
     int mediumPos = sliderStart + (getDifficultySliderValue(DifficultyLevel::MEDIUM) * sliderMaxPos / 100);
     int hardPos = sliderStart + (getDifficultySliderValue(DifficultyLevel::HARD) * sliderMaxPos / 100);
+    int veryhardPos = sliderStart + (getDifficultySliderValue(DifficultyLevel::VERYHARD) * sliderMaxPos / 100);
 
     int customPos = sliderStart + (value * sliderMaxPos / 100);
     if (abs(customPos - easyPos) < 10) customPos = easyPos;
     if (abs(customPos - mediumPos) < 10) customPos = mediumPos;
     if (abs(customPos - hardPos) < 10) customPos = hardPos;
+    if (abs(customPos - veryhardPos) < 10) customPos = veryhardPos;
 
     return customPos;
 }
@@ -24,6 +26,7 @@ int Game::getSliderPosition(int value) {
 const Game::Difficulty Game::difficulties[] = {
     { 12, 9, 4 },
     { 20, 15, 20 },
+    { 24, 18, 90 },
     { 30, 24, 184 }
 };
 
@@ -34,6 +37,8 @@ int Game::getDifficultySliderValue(DifficultyLevel level) {
     case DifficultyLevel::MEDIUM:
         return 32;
     case DifficultyLevel::HARD:
+        return 50;
+    case DifficultyLevel::VERYHARD:
         return 72;
     default:
         return -1;
@@ -50,6 +55,9 @@ Game::DifficultyLevel Game::getCurrentDifficulty(int sliderVal) {
     else if (abs(sliderVal - getDifficultySliderValue(DifficultyLevel::HARD)) < 5) {
         return DifficultyLevel::HARD;
     }
+    else if (abs(sliderVal - getDifficultySliderValue(DifficultyLevel::VERYHARD)) < 5) {
+        return DifficultyLevel::VERYHARD;
+    }
     return DifficultyLevel::CUSTOM;
 }
 
@@ -61,6 +69,8 @@ string Game::difficultyToString(DifficultyLevel level) {
         return "Medium";
     case DifficultyLevel::HARD:
         return "Hard";
+    case DifficultyLevel::VERYHARD:
+        return "VeryHard";
     case DifficultyLevel::CUSTOM:
         return "Custom";
     default:

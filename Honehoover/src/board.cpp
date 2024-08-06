@@ -1,4 +1,4 @@
-#include "Board.h"
+#include "board.h"
 #include <random>
 #include <algorithm>
 #include <chrono>
@@ -11,7 +11,7 @@
 using namespace std;
 
 Board::Board(int width, int height, int mineCount)
-    : width(width), height(height), mineCount(mineCount), gameOver(false), firstReveal(false) { // Initialize firstReveal to false
+    : width(width), height(height), mineCount(mineCount), gameOver(false), firstReveal(false) {
     reset();
 }
 
@@ -75,6 +75,7 @@ int Board::countAdjacentMines(int x, int y) const {
 }
 
 bool Board::revealCell(int x, int y) {
+
     if (x < 0 || x >= width || y < 0 || y >= height || cells[y][x].isRevealed() || cells[y][x].isFlagged()) {
         return false;
     }
@@ -142,19 +143,17 @@ void Board::render(SDL_Renderer* renderer, TTF_Font* font, int screenWidth, int 
 
             if (cells[y][x].isRevealed()) {
                 if (cells[y][x].isMine()) {
-                    SDL_RenderCopy(renderer, textures.at("mine"), nullptr, &cellRect);
+                    SDL_RenderCopy(renderer, textures.at("cross"), nullptr, &cellRect);
                 }
                 else {
-                    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-                    SDL_RenderFillRect(renderer, &cellRect);
+                    SDL_RenderCopy(renderer, textures.at("clean"), nullptr, &cellRect);
                 }
             }
             else if (cells[y][x].isFlagged()) {
-                SDL_RenderCopy(renderer, textures.at("flag"), nullptr, &cellRect);
+                SDL_RenderCopy(renderer, textures.at("frame"), nullptr, &cellRect);
             }
             else {
-                SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
-                SDL_RenderFillRect(renderer, &cellRect);
+                SDL_RenderCopy(renderer, textures.at("grass"), nullptr, &cellRect);
             }
 
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

@@ -1,6 +1,9 @@
+#ifndef GAME_H
+#define GAME_H
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 #include <string>
 #include <map>
 
@@ -44,7 +47,8 @@ private:
     enum class DifficultyLevel {
         EASY,
         MEDIUM,
-        HARD,
+    	HARD,
+        VERYHARD,
         CUSTOM
     };
 
@@ -54,12 +58,25 @@ private:
     };
 
     map<string, SDL_Texture*> textures;
+    
 
     SDL_Texture* loadTexture(const string& path);
     void renderTexture(const string& textureId, int x, int y, int width, int height);
     void loadTextures();
     void freeTextures();
-    
+
+    Mix_Music* loadMixerMusic(const string& path);
+    Mix_Chunk* loadMixerChunk(const string& path);
+    void loadMixers();
+    Mix_Music* backgroundMusic{};
+    Mix_Music* gameplayMusic{};
+	Mix_Music* leaderboardMusic{};
+    Mix_Chunk* cellRevealSound{}; 
+    Mix_Chunk* flagToggleSound{}; 
+    Mix_Music* gameWinSound{};
+    Mix_Music* gameLoseSound{};
+    Mix_Chunk* buttonClickSound{};
+
     bool initSDL();
     void setCustomDifficulty(int);
     int getDifficultySliderValue(DifficultyLevel);
@@ -72,6 +89,8 @@ private:
     void renderText(const string& text, int x, int y, SDL_Color color);
     void renderCenteredText(const string& text, int y, SDL_Color color);
     void renderButton(const Button& button);
+    void renderBackButton(const Button& button);
+    void renderDifficultyButton(const Button& button);
     int getSliderPosition(int value);
     void renderSlider();
     bool isMouseOverButton(const Button& button, int mouseX, int mouseY);
@@ -97,11 +116,12 @@ private:
     Button easyButton;
     Button mediumButton;
     Button hardButton;
+    Button veryhardButton;
     Button highScoresButton;
 
     DifficultyLevel currentDifficulty;
-    Difficulty customDifficulty;
-    int sliderValue;
+    Difficulty customDifficulty{};
+    int sliderValue{};
 
     bool gameWon;
     int elapsedSeconds;
@@ -118,8 +138,11 @@ private:
 
     static const int SCREEN_WIDTH = 960;
     static const int SCREEN_HEIGHT = 720;
-    static const int BUTTON_WIDTH = 200;
-    static const int BUTTON_HEIGHT = 50;
-    static const Difficulty difficulties[3];
+    static const int NAVIGATE_HEIGHT = 60;
+    static const int TRUE_SCREEN_HEIGHT = SCREEN_HEIGHT+NAVIGATE_HEIGHT;
+    static const int BUTTON_WIDTH = 300;
+    static const int BUTTON_HEIGHT = 100;
+    static const Difficulty difficulties[4];
 
 };
+#endif // GAME_H

@@ -55,16 +55,46 @@ void Game::renderCenteredText(const string& text, int y, SDL_Color color) {
 }
 
 void Game::renderButton(const Button& button) {
-    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-    SDL_RenderFillRect(renderer, &button.rect);
-
+    SDL_Texture* buttonBgTexture = textures["btton"];
+    if (buttonBgTexture) {
+        SDL_RenderCopy(renderer, buttonBgTexture, nullptr, &button.rect);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+        SDL_RenderFillRect(renderer, &button.rect);
+    }
     SDL_Color textColor = { 0, 0, 0, 255 };
-    renderText(button.text, button.rect.x + 10, button.rect.y + 10, textColor);
+    renderText(button.text, button.rect.x + 68, button.rect.y + 35, textColor);
 }
 
+void Game::renderBackButton(const Button& button) {
+    SDL_Texture* buttonBgTexture = textures["bttn2"];
+    if (buttonBgTexture) {
+        SDL_RenderCopy(renderer, buttonBgTexture, nullptr, &button.rect);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+        SDL_RenderFillRect(renderer, &button.rect);
+    }
+    SDL_Color textColor = { 0, 0, 0, 255 };
+}
+
+void Game::renderDifficultyButton(const Button& button) {
+    SDL_Texture* buttonBgTexture = textures["bttn1"];
+    if (buttonBgTexture) {
+        SDL_RenderCopy(renderer, buttonBgTexture, nullptr, &button.rect);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+        SDL_RenderFillRect(renderer, &button.rect);
+    }
+    SDL_Color textColor = { 0, 0, 0, 255 };
+}
+
+
 void Game::renderSlider() {
-    SDL_Rect sliderBar = { 20, 550, SCREEN_WIDTH - 40, 10 };
-    SDL_Rect sliderHandle = { getSliderPosition(sliderValue), 540, 20, 30 };
+    SDL_Rect sliderBar = { 20, 580, SCREEN_WIDTH - 40, 10 };
+    SDL_Rect sliderHandle = { getSliderPosition(sliderValue), 570, 20, 30 };
 
     SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
     SDL_RenderFillRect(renderer, &sliderBar);
@@ -85,24 +115,40 @@ void Game::renderSlider() {
         } else
         if (tmp==DifficultyLevel::MEDIUM){
             difficultyText = to_string(difficulties[1].width) + "x" + to_string(difficulties[1].height) + " " + to_string(difficulties[1].mineCount) + " mines";
-        } else
+        } else 
+            if (tmp == DifficultyLevel::HARD) {
+                difficultyText = to_string(difficulties[2].width) + "x" + to_string(difficulties[2].height) + " " + to_string(difficulties[2].mineCount) + " mines";
+            }
+            else
         {
-            difficultyText = to_string(difficulties[2].width) + "x" + to_string(difficulties[2].height) + " " + to_string(difficulties[2].mineCount) + " mines";
+            difficultyText = to_string(difficulties[3].width) + "x" + to_string(difficulties[3].height) + " " + to_string(difficulties[3].mineCount) + " mines";
         }
     }
-    double tmpn = sliderHandle.x*((100-sliderValue)/500+0.8) + sliderHandle.w / 2 - 10;
-    renderText(difficultyText, tmpn, sliderHandle.y - 20, textColor);
+    double tmpn = sliderHandle.x * ((static_cast<double>(100) - sliderValue) / 500 + 0.8) + sliderHandle.w / static_cast<double>(2) - 10;
+    renderText(difficultyText, static_cast<int>(tmpn), sliderHandle.y - 30, textColor);
 }
 
 void Game::renderMainMenu() {
-    SDL_SetRenderDrawColor(renderer, 0xAA, 0xFF, 0xDD, 255);
-    SDL_RenderClear(renderer);
+    SDL_Texture* backgroundTexture = textures["mmnbg"];
+    if (backgroundTexture) {
+        SDL_Rect renderQuad = { 0, 0, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT };
+        SDL_RenderCopy(renderer, backgroundTexture, nullptr, &renderQuad);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 0xAA, 0xFF, 0xDD, 255);
+        SDL_RenderClear(renderer);
+    }
+    if (Mix_PlayingMusic() == 0) {
+        Mix_PlayMusic(backgroundMusic, -1);
+    }
+    
 
     renderButton(startButton);
     renderButton(quitButton);
-    renderButton(easyButton);
-    renderButton(mediumButton);
-    renderButton(hardButton);
+    renderDifficultyButton(easyButton);
+    renderDifficultyButton(mediumButton);
+    renderDifficultyButton(hardButton);
+    renderDifficultyButton(veryhardButton);
     renderSlider();
 
     SDL_Color titleColor = { 0, 0, 0, 255 };
@@ -115,15 +161,28 @@ void Game::renderMainMenu() {
 
 
 void Game::renderGameScreen() {
+    SDL_Texture* backgroundTexture = textures["mmnbg"];
+    if (backgroundTexture) {
+        SDL_Rect renderQuad = { 0, 0, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT };
+        SDL_RenderCopy(renderer, backgroundTexture, nullptr, &renderQuad);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 0xAA, 0xFF, 0xDD, 255);
+        SDL_RenderClear(renderer);
+    }
     board.render(renderer, font, SCREEN_WIDTH, SCREEN_HEIGHT, textures);
-    renderButton(backButton);
+    renderBackButton(backButton);
+
+    if (Mix_PlayingMusic() == 0) {
+        Mix_PlayMusic(gameplayMusic, -1);
+    }
 
     SDL_Color textColor = { 0, 0, 0, 255 };
     string timeText = "Time: " + to_string(elapsedSeconds) + " s";
-    renderText(timeText, 10, SCREEN_HEIGHT - 30, textColor);
+    renderText(timeText, SCREEN_WIDTH - 360, TRUE_SCREEN_HEIGHT - 40, textColor);
 
     string flagText = "Flags: " + to_string(remainingFlags);
-    renderText(flagText, SCREEN_WIDTH - 160, SCREEN_HEIGHT - 30, textColor);
+    renderText(flagText, SCREEN_WIDTH - 160, TRUE_SCREEN_HEIGHT - 40, textColor);
 }
 
 void Game::renderGameOverScreen() {
@@ -134,7 +193,7 @@ void Game::renderGameOverScreen() {
     renderText("Game Over!", SCREEN_WIDTH / 2 - 100, 100, textColor);
     renderText("You Lost!", SCREEN_WIDTH / 2 - 80, 150, textColor);
     renderButton(newGameButton);
-    renderButton(backButton);
+    renderBackButton(backButton);
 }
 
 void Game::renderWinScreen() {
@@ -145,25 +204,32 @@ void Game::renderWinScreen() {
 
     string timeText = "Time: " + to_string(finalTime) + " seconds";
     renderText(timeText, SCREEN_WIDTH / 2 - 100, 200, textColor);
-
     renderButton(newGameButton);
-    renderButton(backButton);
+    renderBackButton(backButton);
     string victoryMessage = "You cleared all mines! Well done!";
-    renderCenteredText(victoryMessage, SCREEN_HEIGHT / 2 + 50, textColor);
+    renderCenteredText(victoryMessage, TRUE_SCREEN_HEIGHT / 2 + 50, textColor);
 }
 
 void Game::renderHighScoreScreen() {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
-    SDL_RenderClear(renderer);
+    SDL_Texture* backgroundTexture = textures["ldbbg"];
+    if (backgroundTexture) {
+        SDL_Rect renderQuad = { 0, 0, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT };
+        SDL_RenderCopy(renderer, backgroundTexture, nullptr, &renderQuad);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+    }
 
     SDL_Color titleColor = { 255, 255, 255, 255 }; 
     renderCenteredText("High Scores", 50, titleColor);
 
+    if (Mix_PlayingMusic() == 0) {
+        Mix_PlayMusic(leaderboardMusic, -1);
+    }
 
     displayHighScores();
-
-    renderButton(backButton);
-
+    renderBackButton(backButton);
     SDL_RenderPresent(renderer);
 }
 
