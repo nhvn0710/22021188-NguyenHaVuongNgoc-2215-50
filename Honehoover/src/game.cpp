@@ -132,7 +132,7 @@ void Game::handleEvents() {
                     sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);
                     DifficultyLevel now = getCurrentDifficulty(sliderValue);
                     
-                    // Set to closest default difficulty if within snap range
+                    // Set to closest default difficulty
                     if (now == DifficultyLevel::CUSTOM) {
                         cout << "Custom difficulty set: " << sliderValue << "%" << endl;
                         sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);

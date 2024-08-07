@@ -1,5 +1,4 @@
-#ifndef GAME_H
-#define GAME_H
+#pragma once
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
@@ -147,4 +146,3 @@ private:
     bool isNewHighScore;
 
 };
-#endif // GAME_H
