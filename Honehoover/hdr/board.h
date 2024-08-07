@@ -15,7 +15,8 @@ public:
     bool isGameOver() const;
     bool isGameWon() const;
     void render(SDL_Renderer* renderer, TTF_Font* font, int screenWidth, int screenHeight, const map<string, SDL_Texture*>& textures) const;
-    void revealAllMines();
+    bool autoRevealAdjacentCells(int x, int y);
+	void revealAllMines();
     int getWidth() const;
     int getHeight() const;
     int getMineCount() const { return mineCount; }
@@ -28,6 +29,7 @@ private:
     void calculateAdjacentMines();
     int countAdjacentMines(int x, int y) const;
     void revealAdjacentCells(int x, int y);
+    
 
     int width;
     int height;
