@@ -1,3 +1,4 @@
+#pragma once
 #include <SDL_stdinc.h>
 #include <SDL_timer.h>
 using namespace std;

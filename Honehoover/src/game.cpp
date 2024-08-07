@@ -1,24 +1,33 @@
 #include "game.h"
-
-#include <cstdio>
 #include <iostream>
 
 using namespace std;
 
 Game::Game() : window(nullptr), renderer(nullptr), font(nullptr), currentState(GameState::MAIN_MENU), board(12, 9, 4),
-               currentDifficulty(), gameWon(false),
+               currentDifficulty(), gameWon(false), altTexture(true),
                elapsedSeconds(0), finalTime(0), remainingFlags(0), isNewHighScore(false)
 {
     loadHighScores();
+    loadTutorialSteps();
 	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
-	quitButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "      Quit   "};
-    backButton = { {20, SCREEN_HEIGHT + 10, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2} };
+	highScoresButton = {{SCREEN_WIDTH / 2 + BUTTON_WIDTH / 16, 300, BUTTON_WIDTH, BUTTON_HEIGHT},"High Scores"};
+	quitButton = {{SCREEN_WIDTH / 2 + BUTTON_WIDTH / 16, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "      Quit   "};
+    tutorialButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 16 - BUTTON_WIDTH, 300, BUTTON_WIDTH, BUTTON_HEIGHT},"  Tutorial" };
+    settingButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 16 - BUTTON_WIDTH, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "   Setting" };
+    
 	newGameButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "New Game"};
+	backButton = { {20, SCREEN_HEIGHT, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2} };
+
 	easyButton = {{0, 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Easy"};
 	mediumButton = {{-18 + 9*getDifficultySliderValue(DifficultyLevel::MEDIUM), 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Medium"};
     hardButton = { {-18 + 9*getDifficultySliderValue(DifficultyLevel::HARD), 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Hard" };
 	veryhardButton = {{-18 + 9*getDifficultySliderValue(DifficultyLevel::VERYHARD), 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Very Hard"};
-    highScoresButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT},"High Scores"};
+
+    musicToggle = { { BUTTON_WIDTH/2 , SCREEN_HEIGHT / 4 - BUTTON_HEIGHT / 2, BUTTON_WIDTH, BUTTON_HEIGHT}, true, "music", "Music" };
+    soundToggle = { {SCREEN_WIDTH / 2+20, SCREEN_HEIGHT / 4 - BUTTON_HEIGHT / 2, BUTTON_WIDTH, BUTTON_HEIGHT}, true, "sound", "Sound Effects" };
+    extraLifeToggle = { {BUTTON_WIDTH/2 , SCREEN_HEIGHT / 2 - BUTTON_HEIGHT / 2, BUTTON_WIDTH, BUTTON_HEIGHT}, board.isLifeCheat(), "extra_life", "Extra Life" };
+    texturesToggle = { {SCREEN_WIDTH / 2+20, SCREEN_HEIGHT / 2 - BUTTON_HEIGHT / 2, BUTTON_WIDTH, BUTTON_HEIGHT}, false, "textures", "Alt Textures" };
+    creditsButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, SCREEN_HEIGHT / 2 + 2*BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT}, "   Credits" };
 }
 
 Game::~Game() {
@@ -35,43 +44,43 @@ bool Game::initialize() {
 
 bool Game::initSDL() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        cout << "SDL could not initialize! SDL Error: " << SDL_GetError() << "\n";
         return false;
     }
     if (TTF_Init() < 0) {
-        printf("TTF could not initialize! TTF_Error: %s\n", TTF_GetError());
+        cout << "TTF could not initialize! TTF_Error: " << TTF_GetError() << "\n";
         return false;
     }
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+        cout << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << "\n";
         return false;
     }
 
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+        cout << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << "\n";
         return false;
     }
 
     window = SDL_CreateWindow("Honehoover", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == nullptr) {
-        printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        cout << "Window could not be created! SDL_Error: " << SDL_GetError() << "\n";
         return false;
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr) {
-        printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+        cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << "\n";
         return false;
     }
 
-    font = TTF_OpenFont("../resources/font/SmashSans-Metaverse.otf", 34);
+    loadFonts();
     if (font == nullptr) {
-        printf("Failed to load font! TTF_Error: %s\n", TTF_GetError());
+        cout << "Failed to load font! TTF_Error: " << TTF_GetError() << "\n";
         return false;
     }
 
     if (window == nullptr || renderer == nullptr || font == nullptr) {
-        printf("Failed to load SDL components: %s\n", SDL_GetError());
+        cout << "Failed to load SDL components: " << SDL_GetError() << "\n";
         TTF_Quit();
         SDL_Quit();
         exit(1);
@@ -89,13 +98,6 @@ void Game::run() {
         update();
         render();
     }
-}
-
-template<typename T>
-const T& clamp(const T& val, const T& lower, const T& upper) {
-    if (val < lower) return lower;
-    else if (val > upper) return upper;
-    else return val;
 }
 
 void Game::handleEvents() {
@@ -132,7 +134,7 @@ void Game::handleEvents() {
                     sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);
                     DifficultyLevel now = getCurrentDifficulty(sliderValue);
                     
-                    // Set to closest default difficulty if within snap range
+                    // Set to closest default difficulty
                     if (now == DifficultyLevel::CUSTOM) {
                         cout << "Custom difficulty set: " << sliderValue << "%" << endl;
                         sliderValue = clamp((mouseX - 20) * 100 / (SCREEN_WIDTH - 60), 0, 100);
@@ -152,6 +154,14 @@ void Game::handleEvents() {
                     Mix_HaltMusic();
                 	currentState = GameState::VIEW_HIGH_SCORES;
                 }
+                else if (isMouseOverButton(tutorialButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
+                    Mix_HaltMusic();
+                    currentTutorialStep = 0;
+                    currentState = GameState::TUTORIAL;
+                }
+                else if (isMouseOverButton(settingButton, mouseX, mouseY)) {
+                    currentState = GameState::SETTINGS;
+                }
                 else if (isMouseOverButton(quitButton, mouseX, mouseY)) {
                     Mix_HaltMusic();
                 	currentState = GameState::QUIT;
@@ -167,6 +177,7 @@ void Game::handleEvents() {
             case GameState::PLAYING:
                 if (isMouseOverButton(backButton, mouseX, mouseY)) {
                     Mix_HaltMusic();
+                    resetGame();
                 	currentState = GameState::MAIN_MENU;
                 }
                 else {
@@ -181,7 +192,6 @@ void Game::handleEvents() {
                     	Mix_PlayChannel(-1, flagToggleSound, 0);
                         board.toggleFlag(cellX, cellY);
                         bool shouldAutoReveal = board.autoRevealAdjacentCells(cellX, cellY);
-                        
                     }
                 }
                 break;
@@ -193,8 +203,98 @@ void Game::handleEvents() {
                 else if (isMouseOverButton(backButton, mouseX, mouseY)) {
                     Mix_HaltMusic();
                     currentState = GameState::MAIN_MENU;
+                    resetGame();
                 }
                 break;
+            case GameState::TUTORIAL:
+                if (isMouseOverButton(backButton, mouseX, mouseY)) {
+                    currentState = GameState::MAIN_MENU;
+                    currentTutorialStep = 0;
+                    resetGame();
+                }
+                else {
+                    cout << elapsedSeconds;
+                    if (currentTutorialStep==0)
+                    {
+                        if (e.button.button == SDL_BUTTON_LEFT) {
+                            currentTutorialStep++;
+                        }
+                    }
+                    if (currentTutorialStep == 1)
+                    {
+                        if (elapsedSeconds > 3 && e.button.button == SDL_BUTTON_LEFT) {
+                            currentTutorialStep++;
+                        }
+                    }
+                    if (currentTutorialStep == 2)
+                    {
+                        if (e.button.button == SDL_BUTTON_RIGHT) {
+                            currentTutorialStep++;
+                        }
+                    }
+                    if (currentTutorialStep == 3)
+                    {
+                        if (elapsedSeconds > 8 && e.button.button == SDL_BUTTON_RIGHT) {
+                            currentTutorialStep++;
+                        }
+                    }
+                    if (currentTutorialStep == 4)
+                    {
+                        if (board.isGameWon()) {
+                            currentTutorialStep++;
+                        }
+                    }
+                	if (currentTutorialStep >= tutorialSteps.size()) {
+                		currentState = GameState::MAIN_MENU;
+                	}
+                    if (currentTutorialStep>1)
+                    {
+	                    int cellX = mouseX / (SCREEN_WIDTH / board.getWidth());
+                    	int cellY = mouseY / (SCREEN_HEIGHT / board.getHeight());
+                    	if (e.button.button == SDL_BUTTON_LEFT) {
+                    		if (board.revealCell(cellX, cellY)) {
+                    			Mix_PlayChannel(-1, cellRevealSound, 0);
+                    		}
+                    	}
+                    	else if (e.button.button == SDL_BUTTON_RIGHT) {
+                    		Mix_PlayChannel(-1, flagToggleSound, 0);
+                    		board.toggleFlag(cellX, cellY);
+                    		bool shouldAutoReveal = board.autoRevealAdjacentCells(cellX, cellY);
+
+                    	}
+                    }
+                }
+                break;
+            case GameState::SETTINGS:
+                if (isMouseOverButton(backButton, mouseX, mouseY)) {
+                    currentState = GameState::MAIN_MENU;
+                }
+                if (isMouseOverButton(creditsButton, mouseX, mouseY)) {
+                    currentState = GameState::CREDITS;
+                }
+                else if (isMouseOverRect(musicToggle.rect, mouseX, mouseY)) {
+                    musicToggle.isOn = !musicToggle.isOn;
+                    toggleMusic();
+                }
+                else if (isMouseOverRect(soundToggle.rect, mouseX, mouseY)) {
+                    soundToggle.isOn = !soundToggle.isOn;
+                    toggleSoundEffects();
+                }
+                else if (isMouseOverRect(extraLifeToggle.rect, mouseX, mouseY)) {
+                    extraLifeToggle.isOn = !extraLifeToggle.isOn;
+                    toggleExtraLife();
+                }
+                else if (isMouseOverRect(texturesToggle.rect, mouseX, mouseY)) {
+                    texturesToggle.isOn = !texturesToggle.isOn;
+                    toggleTextures();
+                }
+                break;
+            case GameState::CREDITS: {
+                if (isMouseOverButton(backButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
+                    currentState = GameState::SETTINGS;
+                }
+            }
+            	break;
             default: 
                 break;
             }
@@ -203,8 +303,7 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
-    if (currentState == GameState::PLAYING) {
-        // Check for win condition
+    if (currentState == GameState::PLAYING || currentState == GameState::TUTORIAL) {
         if (board.isGameWon()) {
         	Mix_PlayMusic(gameWinSound, 0);
             currentState = GameState::GAME_OVER;
@@ -214,7 +313,6 @@ void Game::update() {
             updateHighScores();
         }
 
-        // Check for lose condition
         if (board.isGameOver()) {
             Mix_PlayMusic(gameLoseSound, 0);
             currentState = GameState::GAME_OVER;
@@ -223,13 +321,11 @@ void Game::update() {
             gameTimer.stop();
         }
 
-        // Update game timer
         if (!gameTimer.isStarted()) {
             gameTimer.start();
         }
         elapsedSeconds = static_cast<int>(gameTimer.getElapsedTime()) / 1000;
 
-        // Update flag count
         remainingFlags = board.getMineCount() - board.getFlagCount();
     }
 }

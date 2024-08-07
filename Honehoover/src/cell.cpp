@@ -1,4 +1,4 @@
-#include "Cell.h"
+#include "cell.h"
 using namespace std;
 
 Cell::Cell() : mine(false), revealed(false), flagged(false), adjacentMines(0) {}

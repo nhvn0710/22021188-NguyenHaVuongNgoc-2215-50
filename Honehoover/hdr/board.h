@@ -1,8 +1,9 @@
+#pragma once
 #include <map>
 #include <vector>
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include <xstring>
+#include <string>
 
 #include "cell.h"
 
@@ -19,8 +20,13 @@ public:
 	void revealAllMines();
     int getWidth() const;
     int getHeight() const;
-    int getMineCount() const { return mineCount; }
+    int getMineCount() const;
     int getFlagCount() const;
+    bool isLifeCheat() const;
+    void changeLifeCheat();
+	bool hasExtraLife() const;
+    void useExtraLife();
+    void restoreExtraLife();
 
 private:
     bool firstReveal;
@@ -30,7 +36,9 @@ private:
     int countAdjacentMines(int x, int y) const;
     void revealAdjacentCells(int x, int y);
     
-
+    bool extraLife;
+    static const int lifeMax = 1;
+    int lifeCount;
     int width;
     int height;
     int mineCount;

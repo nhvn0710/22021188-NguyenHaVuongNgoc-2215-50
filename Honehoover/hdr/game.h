@@ -1,5 +1,4 @@
-#ifndef GAME_H
-#define GAME_H
+#pragma once
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
@@ -14,6 +13,7 @@ using namespace std;
 
 class Game {
 public:
+	
     Game();
     ~Game();
     bool initialize();
@@ -28,7 +28,7 @@ private:
     static const int BUTTON_WIDTH = 300;
     static const int BUTTON_HEIGHT = 100;
     static const int HIGHSCORE_COUNT = 15;
-    static const int SLIDER_YPOSITION = 570;
+    static const int SLIDER_YPOSITION = 635;
 
 
     enum class GameState {
@@ -36,6 +36,9 @@ private:
         PLAYING,
         GAME_OVER,
         VIEW_HIGH_SCORES,
+        TUTORIAL,
+        SETTINGS,
+        CREDITS,
         QUIT
     };
 
@@ -67,6 +70,17 @@ private:
         DifficultyLevel difficulty;
     };
 
+    struct Toggle {
+        SDL_Rect rect{ 0, 0, 0, 0 };
+        bool isOn = true;;
+        string id;
+        string label;
+    };
+
+    const Uint8 clamp(const int val, const int lower, const int upper);
+
+	void loadFonts();
+
     map<string, SDL_Texture*> textures;
     SDL_Texture* loadTexture(const string& path);
     void renderTexture(const string& textureId, int x, int y, int width, int height);
@@ -89,19 +103,22 @@ private:
     void setCustomDifficulty(int);
     int getDifficultySliderValue(DifficultyLevel);
     DifficultyLevel getCurrentDifficulty(int);
+    
     void handleEvents();
     void update();
     void render();
     void cleanUp();
 
-    void renderText(const string& text, int x, int y, SDL_Color color);
+    void renderHeaderText(const string& text, int x, int y, SDL_Color color);
+	void renderText(const string& text, int x, int y, SDL_Color color);
     void renderCenteredText(const string& text, int y, SDL_Color color);
     void renderButton(const Button& button);
     void renderBackButton(const Button& button);
     void renderDifficultyButton(const Button& button);
     int getSliderPosition(int value);
     void renderSlider();
-    bool isMouseOverButton(const Button& button, int mouseX, int mouseY);
+    static bool isMouseOverButton(const Button& button, int mouseX, int mouseY);
+    static bool isMouseOverRect(const SDL_Rect& rect, int mouseX, int mouseY);
     void setDifficulty(DifficultyLevel level);
     string difficultyToString(DifficultyLevel level);
 
@@ -110,6 +127,9 @@ private:
     void renderGameOverScreen();
     void renderWinScreen();
     void renderHighScoreScreen();
+    void renderTutorialScreen();
+    void renderSettingsScreen();
+    void renderCreditsScreen();
 
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -118,6 +138,9 @@ private:
     Board board;
 
     Button startButton;
+	Button highScoresButton;
+    Button settingButton;
+    Button tutorialButton;
     Button quitButton;
     Button backButton;
     Button newGameButton;
@@ -125,7 +148,12 @@ private:
     Button mediumButton;
     Button hardButton;
     Button veryhardButton;
-    Button highScoresButton;
+    Button creditsButton;
+
+    Toggle musicToggle;
+    Toggle soundToggle;
+    Toggle extraLifeToggle;
+    Toggle texturesToggle;
 
     static const Difficulty difficulties[4];
     DifficultyLevel currentDifficulty;
@@ -146,5 +174,12 @@ private:
     static bool compareHighScores(const HighScore& a, const HighScore& b);
     bool isNewHighScore;
 
+    vector<string> tutorialSteps;
+    int currentTutorialStep;
+	void loadTutorialSteps();
+    void toggleMusic() const;
+    void toggleSoundEffects() const;
+    void toggleExtraLife();
+    void toggleTextures();
+    bool altTexture;
 };
-#endif // GAME_H
