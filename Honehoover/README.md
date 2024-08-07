@@ -8,12 +8,16 @@ This unique take on the classic game offers multiple difficulty levels and a cus
 
 ## Features
 
+- Graphical user interface with SDL2
 - Multiple default difficulty levels: Easy, Medium, Hard, and Very Hard
+- Tutorial mode
+- Pity mode with extra lives
 - Customizable difficulty with a slider
 - High score tracking
-- Graphical user interface with SDL2
 - Timer and flag counter
 - Background music and sound effects
+- Two different texture packs with unique styles
+- Adjustable setting
 
 
 ## Dependencies
@@ -61,7 +65,8 @@ Use your preferred C++ compiler to compile all the `.h` and `.cpp` files, then l
 
 ## Customization
 
-You can customize the game by modifying the difficulty levels in the `Game::difficulties` array in `getset.cpp`.
+You can customize the game by modifying the values of the game at `game.h`,
+or change difficulty levels in the `Game::difficulties` array in `getset.cpp`.
 
 
 ## High Scores

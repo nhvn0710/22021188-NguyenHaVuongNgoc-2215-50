@@ -326,15 +326,19 @@ void Game::renderCreditsScreen() {
     SDL_RenderClear(renderer);
 
     SDL_Color textColor = { 255, 255, 255, 255 };
-    string creditsText1 = "Game developed by Honehoover Team";
-    string creditsText2 = "Music by Composer";
-    string creditsText3 = "Art by Artist";
-    string creditsText4 = "Special Thanks to Community";
+    string creditsText0 = "Honehoover is a Minesweeper - inspired game";
+	string creditsText01 = "implemented in Cpp using the SDL2 library";
+    string creditsText1 = "Game developed by nhvn0710";
+    string creditsText2 = "Music by nhvn0710 and from freesound.org";
+    string creditsText3 = "Art by nhvn0710 and from craftpix.net";
+    string creditsText4 = "Special Thanks to everyone at UET";
 
-    renderCenteredText(creditsText1, SCREEN_HEIGHT / 4, textColor);
-    renderCenteredText(creditsText2, 2 * SCREEN_HEIGHT / 4, textColor);
-    renderCenteredText(creditsText3, 3 * SCREEN_HEIGHT / 4, textColor);
-    renderCenteredText(creditsText4, 4 * SCREEN_HEIGHT / 4, textColor);
+    renderCenteredText(creditsText0, SCREEN_HEIGHT / 4, textColor);
+    renderCenteredText(creditsText01, SCREEN_HEIGHT / 4 + BUTTON_HEIGHT/2, textColor);
+    renderCenteredText(creditsText1, SCREEN_HEIGHT / 4 + BUTTON_HEIGHT * 3 / 2, textColor);
+    renderCenteredText(creditsText2, SCREEN_HEIGHT / 4 + BUTTON_HEIGHT * 4 / 2, textColor);
+    renderCenteredText(creditsText3, SCREEN_HEIGHT / 4 + BUTTON_HEIGHT * 5 / 2, textColor);
+    renderCenteredText(creditsText4, SCREEN_HEIGHT / 4 + BUTTON_HEIGHT * 6 / 2, textColor);
 
     renderBackButton(backButton);
 }

@@ -4,7 +4,7 @@
 using namespace std;
 
 Game::Game() : window(nullptr), renderer(nullptr), font(nullptr), currentState(GameState::MAIN_MENU), board(12, 9, 4),
-               currentDifficulty(), gameWon(false), altTexture(false),
+               currentDifficulty(), gameWon(false), altTexture(true),
                elapsedSeconds(0), finalTime(0), remainingFlags(0), isNewHighScore(false)
 {
     loadHighScores();
@@ -16,7 +16,7 @@ Game::Game() : window(nullptr), renderer(nullptr), font(nullptr), currentState(G
     settingButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 16 - BUTTON_WIDTH, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "   Setting" };
     
 	newGameButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "New Game"};
-	backButton = { {20, SCREEN_HEIGHT + 10, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2} };
+	backButton = { {20, SCREEN_HEIGHT, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2} };
 
 	easyButton = {{0, 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Easy"};
 	mediumButton = {{-18 + 9*getDifficultySliderValue(DifficultyLevel::MEDIUM), 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Medium"};
