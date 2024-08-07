@@ -112,6 +112,45 @@ void Board::revealAdjacentCells(int x, int y) {
     }
 }
 
+bool Board::autoRevealAdjacentCells(int x, int y) {
+    if (!cells[y][x].isRevealed() || cells[y][x].isMine()) {
+        return false;
+    }
+    int flaggedMines = 0;
+    int actualMines = 0;
+
+    for (int dy = -1; dy <= 1; ++dy) {
+        for (int dx = -1; dx <= 1; ++dx) {
+            int nx = x + dx;
+            int ny = y + dy;
+            if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                if (cells[ny][nx].isFlagged()) flaggedMines++;
+                if (cells[ny][nx].isMine()) actualMines++;
+            }
+        }
+    }
+
+    if (flaggedMines != cells[y][x].getAdjacentMines()) {
+        return false;
+    }
+
+    if (flaggedMines != actualMines) {
+        gameOver = true;
+        return true;
+    }
+
+    for (int dy = -1; dy <= 1; ++dy) {
+        for (int dx = -1; dx <= 1; ++dx) {
+            int nx = x + dx;
+            int ny = y + dy;
+            if (nx >= 0 && nx < width && ny >= 0 && ny < height && !cells[ny][nx].isFlagged()) {
+                revealCell(nx, ny);
+            }
+        }
+    }
+    return true;
+}
+
 void Board::toggleFlag(int x, int y) {
     if (x >= 0 && x < width && y >= 0 && y < height && !cells[y][x].isRevealed()) {
         cells[y][x].toggleFlag();

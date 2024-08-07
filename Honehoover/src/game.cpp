@@ -178,8 +178,10 @@ void Game::handleEvents() {
                         }
                     }
                     else if (e.button.button == SDL_BUTTON_RIGHT) {
-                        Mix_PlayChannel(-1, flagToggleSound, 0);
+                    	Mix_PlayChannel(-1, flagToggleSound, 0);
                         board.toggleFlag(cellX, cellY);
+                        bool shouldAutoReveal = board.autoRevealAdjacentCells(cellX, cellY);
+                        
                     }
                 }
                 break;
