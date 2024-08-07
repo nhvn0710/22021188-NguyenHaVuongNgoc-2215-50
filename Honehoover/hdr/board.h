@@ -3,7 +3,7 @@
 #include <vector>
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include <xstring>
+#include <string>
 
 #include "cell.h"
 
@@ -22,6 +22,8 @@ public:
     int getHeight() const;
     int getMineCount() const { return mineCount; }
     int getFlagCount() const;
+    bool hasExtraLife() const { return extraLife; }
+    void useExtraLife() { extraLife = false; }
 
 private:
     bool firstReveal;
@@ -31,7 +33,7 @@ private:
     int countAdjacentMines(int x, int y) const;
     void revealAdjacentCells(int x, int y);
     
-
+    bool extraLife;
     int width;
     int height;
     int mineCount;

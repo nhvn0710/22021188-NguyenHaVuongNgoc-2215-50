@@ -3,15 +3,16 @@
 #include <algorithm>
 #include <chrono>
 #include <iostream>
+#include <string>
 #include <map>
 #include <numeric>
 #include <SDL_ttf.h>
-#include <string>
+
 
 using namespace std;
 
 Board::Board(int width, int height, int mineCount)
-    : width(width), height(height), mineCount(mineCount), gameOver(false), firstReveal(false) {
+    : width(width), height(height), mineCount(mineCount), gameOver(false), firstReveal(false), extraLife(true) {
     reset();
 }
 
@@ -20,6 +21,7 @@ void Board::reset() {
     cells.resize(height, vector<Cell>(width));
     gameOver = false;
     firstReveal = false;
+    extraLife = true;
     initializeBoard();
 }
 
@@ -29,7 +31,9 @@ void Board::initializeBoard() {
 
 void Board::placeMines(int firstX, int firstY) {
     vector<int> positions(width * height);
-    iota(positions.begin(), positions.end(), 0);
+    for (int i = 0; i < positions.size(); ++i) {
+        positions[i] = i;
+    }
 
     positions.erase(remove_if(positions.begin(), positions.end(), [this, firstX, firstY](int pos) {
         int x = pos % width, y = pos / width;
@@ -38,7 +42,7 @@ void Board::placeMines(int firstX, int firstY) {
 
     random_device rd;
     mt19937 g(rd());
-    g.seed(chrono::steady_clock::now().time_since_epoch().count());
+    g.seed(static_cast<unsigned int>(chrono::steady_clock::now().time_since_epoch().count()));
     shuffle(positions.begin(), positions.end(), g);
 
     for (int i = 0; i < mineCount; ++i) {
@@ -89,8 +93,15 @@ bool Board::revealCell(int x, int y) {
     cells[y][x].reveal();
 
     if (cells[y][x].isMine()) {
-        gameOver = true;
-        return true;
+        if (extraLife) {
+            useExtraLife();
+            cells[y][x].reveal();
+            return true;
+        }
+        else {
+            gameOver = true;
+            return true;
+        }
     }
 
     if (cells[y][x].getAdjacentMines() == 0) {

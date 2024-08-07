@@ -1,6 +1,4 @@
 #include "game.h"
-
-#include <cstdio>
 #include <iostream>
 
 using namespace std;
@@ -35,43 +33,43 @@ bool Game::initialize() {
 
 bool Game::initSDL() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        cout << "SDL could not initialize! SDL Error: " << SDL_GetError() << "\n";
         return false;
     }
     if (TTF_Init() < 0) {
-        printf("TTF could not initialize! TTF_Error: %s\n", TTF_GetError());
+        cout << "TTF could not initialize! TTF_Error: " << TTF_GetError() << "\n";
         return false;
     }
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+        cout << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << "\n";
         return false;
     }
 
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+        cout << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << "\n";
         return false;
     }
 
     window = SDL_CreateWindow("Honehoover", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == nullptr) {
-        printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        cout << "Window could not be created! SDL_Error: " << SDL_GetError() << "\n";
         return false;
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr) {
-        printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+        cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << "\n";
         return false;
     }
 
     font = TTF_OpenFont("../resources/font/SmashSans-Metaverse.otf", 34);
     if (font == nullptr) {
-        printf("Failed to load font! TTF_Error: %s\n", TTF_GetError());
+        cout << "Failed to load font! TTF_Error: " << TTF_GetError() << "\n";
         return false;
     }
 
     if (window == nullptr || renderer == nullptr || font == nullptr) {
-        printf("Failed to load SDL components: %s\n", SDL_GetError());
+        cout << "Failed to load SDL components: " << SDL_GetError() << "\n";
         TTF_Quit();
         SDL_Quit();
         exit(1);

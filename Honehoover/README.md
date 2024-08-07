@@ -18,11 +18,12 @@ This unique take on the classic game offers multiple difficulty levels and a cus
 
 ## Dependencies
 
+Built and complied in Visual Studio using:
 - SDL2
 - SDL2_ttf
 - SDL2_image
 - SDL2_mixer
-
+- and other standard C++ libraries
 
 ## Building the Game
 

@@ -67,6 +67,12 @@
     <Media Include="..\resources\mixer\song03.mp3" />
     <Media Include="..\resources\mixer\winsound.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="highscores.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
