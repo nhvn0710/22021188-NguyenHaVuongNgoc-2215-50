@@ -20,10 +20,13 @@ public:
 	void revealAllMines();
     int getWidth() const;
     int getHeight() const;
-    int getMineCount() const { return mineCount; }
+    int getMineCount() const;
     int getFlagCount() const;
-    bool hasExtraLife() const { return extraLife; }
-    void useExtraLife() { extraLife = false; }
+    bool isLifeCheat() const;
+    void changeLifeCheat();
+	bool hasExtraLife() const;
+    void useExtraLife();
+    void restoreExtraLife();
 
 private:
     bool firstReveal;
@@ -34,6 +37,8 @@ private:
     void revealAdjacentCells(int x, int y);
     
     bool extraLife;
+    static const int lifeMax = 1;
+    int lifeCount;
     int width;
     int height;
     int mineCount;

@@ -30,6 +30,15 @@ void Game::loadTextures() {
     textures["bttn2"] = loadTexture("../resources/image/bttn2.png");
     textures["mmnbg"] = loadTexture("../resources/image/mmnbg.png");
     textures["ldbbg"] = loadTexture("../resources/image/ldbbg.png");
+
+    textures["music_on"] = loadTexture("../resources/image/music_on.png");
+    textures["music_off"] = loadTexture("../resources/image/music_off.png");
+    textures["sound_on"] = loadTexture("../resources/image/sound_on.png");
+    textures["sound_off"] = loadTexture("../resources/image/sound_off.png");
+    textures["extra_life_on"] = loadTexture("../resources/image/extralive_on.png");
+    textures["extra_life_off"] = loadTexture("../resources/image/extralive_off.png");
+    textures["textures_on"] = loadTexture("../resources/image/texture_on.png");
+    textures["textures_off"] = loadTexture("../resources/image/texture_off.png");
 }
 
 void Game::renderTexture(const string& textureId, int x, int y, int width, int height) {

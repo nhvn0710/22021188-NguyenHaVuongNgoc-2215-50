@@ -29,19 +29,22 @@
     <ClCompile Include="..\src\cell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\game_master.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\game_render.cpp">
+    <ClCompile Include="..\src\getset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\game_scores.cpp">
+    <ClCompile Include="..\src\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\game_getter.cpp">
+    <ClCompile Include="..\src\render.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scores.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="init.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,15 +66,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\resources\font\JosefinSlab-Regular.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
-    <Font Include="..\resources\font\QX_LatypeSans.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
-    <Font Include="..\resources\font\Restore-W00-Heavy.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
+    <Font Include="..\resources\font\SmashSans-Metaverse.otf" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\resources\image\antiq.png">
@@ -113,6 +108,30 @@
     <Image Include="..\resources\image\ldbbg.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\resources\image\extralive_off.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\extralive_on.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\music_off.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\music_on.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\sound_off.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\sound_on.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\texture_off.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\texture_on.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\resources\mixer\button.mp3">
@@ -139,5 +158,11 @@
     <Media Include="..\resources\mixer\song03.mp3">
       <Filter>Resource Files</Filter>
     </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="highscores.txt" />
   </ItemGroup>
 </Project>

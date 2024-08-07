@@ -1,6 +1,7 @@
 532 VeryHard
 557 Hard
 0 Easy
+0 Easy
 140 Medium
 153 Medium
 4 Easy
@@ -12,4 +13,3 @@
 16 Easy
 16 Easy
 43 Easy
-100 Easy

@@ -17,6 +17,12 @@ void Game::render() {
     case GameState::TUTORIAL:
         renderTutorialScreen();
         break;
+    case GameState::SETTINGS:
+        renderSettingsScreen();
+        break;
+    case GameState::CREDITS:
+        renderCreditsScreen();
+        break;
     case GameState::GAME_OVER:
         if (gameWon) {
             renderWinScreen();
@@ -28,6 +34,20 @@ void Game::render() {
     }
 
     SDL_RenderPresent(renderer);
+}
+
+void Game::renderHeaderText(const string& text, int x, int y, SDL_Color color) {
+    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    int width, height;
+    SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+    SDL_Rect dstRect = { x, y, 2*width, 2*height };
+
+    SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
 }
 
 void Game::renderText(const string& text, int x, int y, SDL_Color color) {
@@ -127,7 +147,7 @@ void Game::renderSlider() {
         }
     }
     double tmpn = sliderHandle.x * ((static_cast<double>(100) - sliderValue) / 500 + 0.8) + sliderHandle.w / static_cast<double>(2) - 28;
-    renderText(difficultyText, static_cast<int>(tmpn), sliderHandle.y - 30, textColor);
+    renderText(difficultyText, static_cast<int>(tmpn), sliderHandle.y - 40, textColor);
 }
 
 
@@ -158,12 +178,12 @@ void Game::renderMainMenu() {
     renderDifficultyButton(veryhardButton);
     renderSlider();
 
-    SDL_Color titleColor = { 225, 96, 0, 255 };
-    renderText("Honehoover", SCREEN_WIDTH / 2 - 100, 100, titleColor);
+    SDL_Color titleColor = { 155, 225, 155, 255 };
+    renderHeaderText("Honehoover", SCREEN_WIDTH / 2 - 180, 100, titleColor);
     
-    SDL_Color difficultyColor = { 0, 0, 0, 255 };
+    SDL_Color difficultyColor = { 255, clamp(255 - sliderValue * 2, 0, 255), clamp(255 - sliderValue * 2, 0, 255), 255 };
     string difficultyText = "Difficulty: " + difficultyToString(currentDifficulty);
-    renderCenteredText(difficultyText, startButton.rect.y - 50, difficultyColor);
+    renderCenteredText(difficultyText, SLIDER_YPOSITION+60, difficultyColor);
 }
 
 void Game::renderGameScreen() {
@@ -272,5 +292,50 @@ void Game::renderTutorialScreen() {
     renderText(flagText, SCREEN_WIDTH - 140, TRUE_SCREEN_HEIGHT - 40, textColor);
 
     SDL_RenderPresent(renderer);
+}
+
+void Game::renderSettingsScreen() {
+    SDL_Texture* backgroundTexture = textures["mmnbg"];
+    if (backgroundTexture) {
+        SDL_Rect renderQuad = { 0, 0, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT };
+        SDL_RenderCopy(renderer, backgroundTexture, nullptr, &renderQuad);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 0xAA, 0xFF, 0xDD, 255);
+        SDL_RenderClear(renderer);
+    }
+
+    auto renderToggle = [&](const Toggle& toggle) {
+        string toggleTextureId = toggle.isOn ? toggle.id + "_on" : toggle.id + "_off";
+        SDL_Texture* toggleTexture = textures[toggleTextureId];
+        SDL_RenderCopy(renderer, toggleTexture, NULL, &toggle.rect);
+        };
+
+    renderToggle(musicToggle);
+    renderToggle(soundToggle);
+    renderToggle(extraLifeToggle);
+    renderToggle(texturesToggle);
+
+    renderButton(creditsButton);
+    
+    renderBackButton(backButton);
+}
+
+void Game::renderCreditsScreen() {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    SDL_Color textColor = { 255, 255, 255, 255 };
+    string creditsText1 = "Game developed by Honehoover Team";
+    string creditsText2 = "Music by Composer";
+    string creditsText3 = "Art by Artist";
+    string creditsText4 = "Special Thanks to Community";
+
+    renderCenteredText(creditsText1, SCREEN_HEIGHT / 4, textColor);
+    renderCenteredText(creditsText2, 2 * SCREEN_HEIGHT / 4, textColor);
+    renderCenteredText(creditsText3, 3 * SCREEN_HEIGHT / 4, textColor);
+    renderCenteredText(creditsText4, 4 * SCREEN_HEIGHT / 4, textColor);
+
+    renderBackButton(backButton);
 }
 

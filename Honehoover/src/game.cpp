@@ -22,6 +22,12 @@ Game::Game() : window(nullptr), renderer(nullptr), font(nullptr), currentState(G
 	mediumButton = {{-18 + 9*getDifficultySliderValue(DifficultyLevel::MEDIUM), 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Medium"};
     hardButton = { {-18 + 9*getDifficultySliderValue(DifficultyLevel::HARD), 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Hard" };
 	veryhardButton = {{-18 + 9*getDifficultySliderValue(DifficultyLevel::VERYHARD), 600, BUTTON_WIDTH/3, BUTTON_HEIGHT}, "Very Hard"};
+
+    musicToggle = { { BUTTON_WIDTH/2 , SCREEN_HEIGHT / 4 - BUTTON_HEIGHT / 2, BUTTON_WIDTH, BUTTON_HEIGHT}, true, "music", "Music" };
+    soundToggle = { {SCREEN_WIDTH / 2+20, SCREEN_HEIGHT / 4 - BUTTON_HEIGHT / 2, BUTTON_WIDTH, BUTTON_HEIGHT}, true, "sound", "Sound Effects" };
+    extraLifeToggle = { {BUTTON_WIDTH/2 , SCREEN_HEIGHT / 2 - BUTTON_HEIGHT / 2, BUTTON_WIDTH, BUTTON_HEIGHT}, board.isLifeCheat(), "extra_life", "Extra Life" };
+    texturesToggle = { {SCREEN_WIDTH / 2+20, SCREEN_HEIGHT / 2 - BUTTON_HEIGHT / 2, BUTTON_WIDTH, BUTTON_HEIGHT}, false, "textures", "Alt Textures" };
+    creditsButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, SCREEN_HEIGHT / 2 + 2*BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT}, "Credits" };
 }
 
 Game::~Game() {
@@ -94,13 +100,6 @@ void Game::run() {
     }
 }
 
-template<typename T>
-const T& clamp(const T& val, const T& lower, const T& upper) {
-    if (val < lower) return lower;
-    else if (val > upper) return upper;
-    else return val;
-}
-
 void Game::handleEvents() {
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
@@ -159,6 +158,9 @@ void Game::handleEvents() {
                     Mix_HaltMusic();
                     currentTutorialStep = 0;
                     currentState = GameState::TUTORIAL;
+                }
+                else if (isMouseOverButton(settingButton, mouseX, mouseY)) {
+                    currentState = GameState::SETTINGS;
                 }
                 else if (isMouseOverButton(quitButton, mouseX, mouseY)) {
                     Mix_HaltMusic();
@@ -263,6 +265,36 @@ void Game::handleEvents() {
                     }
                 }
                 break;
+            case GameState::SETTINGS:
+                if (isMouseOverButton(backButton, mouseX, mouseY)) {
+                    currentState = GameState::MAIN_MENU;
+                }
+                if (isMouseOverButton(creditsButton, mouseX, mouseY)) {
+                    currentState = GameState::CREDITS;
+                }
+                else if (isMouseOverRect(musicToggle.rect, mouseX, mouseY)) {
+                    musicToggle.isOn = !musicToggle.isOn;
+                    toggleMusic();
+                }
+                else if (isMouseOverRect(soundToggle.rect, mouseX, mouseY)) {
+                    soundToggle.isOn = !soundToggle.isOn;
+                    toggleSoundEffects();
+                }
+                else if (isMouseOverRect(extraLifeToggle.rect, mouseX, mouseY)) {
+                    extraLifeToggle.isOn = !extraLifeToggle.isOn;
+                    toggleExtraLife();
+                }
+                else if (isMouseOverRect(texturesToggle.rect, mouseX, mouseY)) {
+                    texturesToggle.isOn = !texturesToggle.isOn;
+                    toggleTextures();
+                }
+                break;
+            case GameState::CREDITS: {
+                if (isMouseOverButton(backButton, mouseX, mouseY) && e.button.button == SDL_BUTTON_LEFT) {
+                    currentState = GameState::SETTINGS;
+                }
+            }
+            	break;
             default: 
                 break;
             }

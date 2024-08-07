@@ -1,8 +1,79 @@
 #include "game.h"
 
+
+const Game::Difficulty Game::difficulties[] = {
+    { 12, 9, 4 },
+    { 20, 15, 36 },
+    { 24, 18, 90 },
+    { 30, 24, 226 }
+};
+
+void Game::loadTutorialSteps()
+{
+    tutorialSteps = {
+        "Welcome to the Honehoover tutorial!",
+        "Left-click on a cell to reveal it. Try now!",
+        "Right-click to place on suspected mine.",
+        "Right-click on opened cell for a quick clear.",
+        "Clear all cells without stumbling on a mine!"
+    };
+    currentTutorialStep = 0;
+}
+
+
+const Uint8 Game::clamp(const int val, const int lower, const int upper) {
+    if (val < lower) return lower;
+    else if (val > upper) return upper;
+    else return val;
+}
+
+int Board::getFlagCount() const {
+    int count = 0;
+    for (const auto& row : cells) {
+        for (const auto& cell : row) {
+            if (cell.isFlagged()) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+int Board::getWidth() const {
+    return width;
+}
+
+int Board::getHeight() const {
+    return height;
+}
+
+int Board::getMineCount() const { return mineCount; }
+
+bool Board::isLifeCheat() const
+{
+    return extraLife;
+}
+
+void Board::changeLifeCheat()
+{
+    extraLife = !extraLife;
+}
+
+bool Board::hasExtraLife() const { return lifeCount; }
+
+void Board::useExtraLife() { lifeCount--; }
+
+void Board::restoreExtraLife() { lifeCount=lifeMax; }
+
+
 bool Game::isMouseOverButton(const Button& button, int mouseX, int mouseY) {
     return (mouseX >= button.rect.x && mouseX <= button.rect.x + button.rect.w &&
         mouseY >= button.rect.y && mouseY <= button.rect.y + button.rect.h);
+}
+
+bool Game::isMouseOverRect(const SDL_Rect& rect, int mouseX, int mouseY) {
+    return (mouseX >= rect.x && mouseX <= rect.x + rect.w &&
+        mouseY >= rect.y && mouseY <= rect.y + rect.h);
 }
 
 int Game::getSliderPosition(int value) {
@@ -22,13 +93,6 @@ int Game::getSliderPosition(int value) {
 
     return customPos;
 }
-
-const Game::Difficulty Game::difficulties[] = {
-    { 12, 9, 4 },
-    { 20, 15, 36 },
-    { 24, 18, 90 },
-    { 30, 24, 226 }
-};
 
 int Game::getDifficultySliderValue(DifficultyLevel level) {
     switch (level) {
@@ -77,8 +141,6 @@ string Game::difficultyToString(DifficultyLevel level) {
         return "Unknown Difficulty";
     }
 }
-
-
 
 void Game::setDifficulty(DifficultyLevel level) {
     switch (level) {
@@ -129,15 +191,30 @@ void Game::setCustomDifficulty(int sliderVal)
     customDifficulty = { width, height, mineCount, true };
 }
 
-void Game::loadTutorialSteps()
+void Game::toggleMusic() const
 {
-    tutorialSteps = {
-        "Welcome to the Honehoover tutorial!",
-        "Left-click on a cell to reveal it. Try now!",
-        "Right-click to place on suspected mine.",
-        "Right-click on opened cell for a quick clear.",
-        "Clear all cells without stumbling on a mine!"
-    };
-    currentTutorialStep = 0;
+    if (musicToggle.isOn) {
+        Mix_VolumeMusic(MIX_MAX_VOLUME);
+    }
+    else {
+        Mix_VolumeMusic(0);
+    }
 }
 
+void Game::toggleSoundEffects() const
+{
+    if (soundToggle.isOn) {
+        Mix_Volume(-1, MIX_MAX_VOLUME);
+    }
+    else {
+        Mix_Volume(-1, 0);
+    }
+}
+
+void Game::toggleExtraLife() {
+    board.changeLifeCheat();
+}
+
+void Game::toggleTextures() {
+    //useAlternativeTextures = texturesToggle.isOn;
+}

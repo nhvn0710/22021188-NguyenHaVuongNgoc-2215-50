@@ -11,7 +11,7 @@
 using namespace std;
 
 Board::Board(int width, int height, int mineCount)
-    : width(width), height(height), mineCount(mineCount), gameOver(false), firstReveal(false), extraLife(true) {
+    : width(width), height(height), mineCount(mineCount), gameOver(false), firstReveal(false), lifeCount(lifeMax) {
     reset();
 }
 
@@ -20,7 +20,7 @@ void Board::reset() {
     cells.resize(height, vector<Cell>(width));
     gameOver = false;
     firstReveal = false;
-    extraLife = true;
+    restoreExtraLife();
     initializeBoard();
 }
 
@@ -92,7 +92,7 @@ bool Board::revealCell(int x, int y) {
     cells[y][x].reveal();
 
     if (cells[y][x].isMine()) {
-        if (extraLife) {
+        if (extraLife && hasExtraLife()) {
             useExtraLife();
             cells[y][x].reveal();
             return true;
@@ -253,24 +253,4 @@ void Board::revealAllMines() {
             }
         }
     }
-}
-
-int Board::getFlagCount() const {
-    int count = 0;
-    for (const auto& row : cells) {
-        for (const auto& cell : row) {
-            if (cell.isFlagged()) {
-                count++;
-            }
-        }
-    }
-    return count;
-}
-
-int Board::getWidth() const {
-    return width;
-}
-
-int Board::getHeight() const {
-    return height;
 }
