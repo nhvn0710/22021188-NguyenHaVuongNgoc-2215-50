@@ -5,6 +5,7 @@
 140 Medium
 153 Medium
 4 Easy
+4 Easy
 9 Easy
 12 Easy
 12 Easy
@@ -12,4 +13,3 @@
 15 Easy
 16 Easy
 16 Easy
-43 Easy

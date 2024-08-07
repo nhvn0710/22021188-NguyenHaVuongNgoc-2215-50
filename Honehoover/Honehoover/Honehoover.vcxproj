@@ -41,29 +41,48 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="..\resources\font\SmashSans-Metaverse.otf" />
+    <Font Include="..\resources\font\YomiyasuSansSerif-Rounded.otf" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\resources\image\antiq.png" />
+    <Image Include="..\resources\image\antiq2.png" />
     <Image Include="..\resources\image\bttn1.png" />
     <Image Include="..\resources\image\bttn2.png" />
     <Image Include="..\resources\image\btton.png" />
+    <Image Include="..\resources\image\btton2.png" />
     <Image Include="..\resources\image\clean.png" />
+    <Image Include="..\resources\image\clean2.png" />
     <Image Include="..\resources\image\cross.png" />
+    <Image Include="..\resources\image\cross2.png" />
     <Image Include="..\resources\image\crtal.png" />
+    <Image Include="..\resources\image\crtal2.png" />
     <Image Include="..\resources\image\extralive_off.png" />
+    <Image Include="..\resources\image\extralive_off2.png" />
     <Image Include="..\resources\image\extralive_on.png" />
+    <Image Include="..\resources\image\extralive_on2.png" />
     <Image Include="..\resources\image\frame.png" />
+    <Image Include="..\resources\image\frame2.png" />
     <Image Include="..\resources\image\grass.png" />
+    <Image Include="..\resources\image\grass2.png" />
     <Image Include="..\resources\image\ldbbg.png" />
     <Image Include="..\resources\image\mmnbg.png" />
+    <Image Include="..\resources\image\mmnbg2.png" />
     <Image Include="..\resources\image\music_off.png" />
+    <Image Include="..\resources\image\music_off2.png" />
     <Image Include="..\resources\image\music_on.png" />
+    <Image Include="..\resources\image\music_on2.png" />
     <Image Include="..\resources\image\pylon.png" />
+    <Image Include="..\resources\image\pylon2.png" />
     <Image Include="..\resources\image\sound_off.png" />
+    <Image Include="..\resources\image\sound_off2.png" />
     <Image Include="..\resources\image\sound_on.png" />
+    <Image Include="..\resources\image\sound_on2.png" />
     <Image Include="..\resources\image\steel.png" />
+    <Image Include="..\resources\image\steel2.png" />
     <Image Include="..\resources\image\texture_off.png" />
+    <Image Include="..\resources\image\texture_off2.png" />
     <Image Include="..\resources\image\texture_on.png" />
+    <Image Include="..\resources\image\texture_on2.png" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\resources\mixer\button.mp3" />

@@ -79,7 +79,7 @@ private:
 
     const Uint8 clamp(const int val, const int lower, const int upper);
 
-
+	void loadFonts();
 
     map<string, SDL_Texture*> textures;
     SDL_Texture* loadTexture(const string& path);
@@ -181,4 +181,5 @@ private:
     void toggleSoundEffects() const;
     void toggleExtraLife();
     void toggleTextures();
+    bool altTexture;
 };

@@ -4,7 +4,7 @@
 using namespace std;
 
 Game::Game() : window(nullptr), renderer(nullptr), font(nullptr), currentState(GameState::MAIN_MENU), board(12, 9, 4),
-               currentDifficulty(), gameWon(false),
+               currentDifficulty(), gameWon(false), altTexture(false),
                elapsedSeconds(0), finalTime(0), remainingFlags(0), isNewHighScore(false)
 {
     loadHighScores();
@@ -12,8 +12,8 @@ Game::Game() : window(nullptr), renderer(nullptr), font(nullptr), currentState(G
 	startButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT}, "Start Game"};
 	highScoresButton = {{SCREEN_WIDTH / 2 + BUTTON_WIDTH / 16, 300, BUTTON_WIDTH, BUTTON_HEIGHT},"High Scores"};
 	quitButton = {{SCREEN_WIDTH / 2 + BUTTON_WIDTH / 16, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "      Quit   "};
-    tutorialButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 16 - BUTTON_WIDTH, 300, BUTTON_WIDTH, BUTTON_HEIGHT},"   Tutorial" };
-    settingButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 16 - BUTTON_WIDTH, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "    Setting" };
+    tutorialButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 16 - BUTTON_WIDTH, 300, BUTTON_WIDTH, BUTTON_HEIGHT},"  Tutorial" };
+    settingButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 16 - BUTTON_WIDTH, 400, BUTTON_WIDTH, BUTTON_HEIGHT}, "   Setting" };
     
 	newGameButton = {{SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT}, "New Game"};
 	backButton = { {20, SCREEN_HEIGHT + 10, BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2} };
@@ -27,7 +27,7 @@ Game::Game() : window(nullptr), renderer(nullptr), font(nullptr), currentState(G
     soundToggle = { {SCREEN_WIDTH / 2+20, SCREEN_HEIGHT / 4 - BUTTON_HEIGHT / 2, BUTTON_WIDTH, BUTTON_HEIGHT}, true, "sound", "Sound Effects" };
     extraLifeToggle = { {BUTTON_WIDTH/2 , SCREEN_HEIGHT / 2 - BUTTON_HEIGHT / 2, BUTTON_WIDTH, BUTTON_HEIGHT}, board.isLifeCheat(), "extra_life", "Extra Life" };
     texturesToggle = { {SCREEN_WIDTH / 2+20, SCREEN_HEIGHT / 2 - BUTTON_HEIGHT / 2, BUTTON_WIDTH, BUTTON_HEIGHT}, false, "textures", "Alt Textures" };
-    creditsButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, SCREEN_HEIGHT / 2 + 2*BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT}, "Credits" };
+    creditsButton = { {SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, SCREEN_HEIGHT / 2 + 2*BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT}, "   Credits" };
 }
 
 Game::~Game() {
@@ -73,7 +73,7 @@ bool Game::initSDL() {
         return false;
     }
 
-    font = TTF_OpenFont("../resources/font/SmashSans-Metaverse.otf", 34);
+    loadFonts();
     if (font == nullptr) {
         cout << "Failed to load font! TTF_Error: " << TTF_GetError() << "\n";
         return false;

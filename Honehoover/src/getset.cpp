@@ -216,5 +216,7 @@ void Game::toggleExtraLife() {
 }
 
 void Game::toggleTextures() {
-    //useAlternativeTextures = texturesToggle.isOn;
+    altTexture = !altTexture;
+    loadTextures();
+    loadFonts();
 }
