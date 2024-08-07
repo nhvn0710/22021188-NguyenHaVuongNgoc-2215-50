@@ -13,6 +13,7 @@ using namespace std;
 
 class Game {
 public:
+	
     Game();
     ~Game();
     bool initialize();
@@ -35,6 +36,7 @@ private:
         PLAYING,
         GAME_OVER,
         VIEW_HIGH_SCORES,
+        TUTORIAL,
         QUIT
     };
 
@@ -117,6 +119,9 @@ private:
     Board board;
 
     Button startButton;
+	Button highScoresButton;
+    Button settingButton;
+    Button tutorialButton;
     Button quitButton;
     Button backButton;
     Button newGameButton;
@@ -124,7 +129,6 @@ private:
     Button mediumButton;
     Button hardButton;
     Button veryhardButton;
-    Button highScoresButton;
 
     static const Difficulty difficulties[4];
     DifficultyLevel currentDifficulty;
@@ -145,4 +149,8 @@ private:
     static bool compareHighScores(const HighScore& a, const HighScore& b);
     bool isNewHighScore;
 
+    vector<string> tutorialSteps;
+    int currentTutorialStep;
+	void loadTutorialSteps();
+    void renderTutorialScreen();
 };

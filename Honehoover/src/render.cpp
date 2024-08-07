@@ -14,6 +14,9 @@ void Game::render() {
     case GameState::VIEW_HIGH_SCORES:
         renderHighScoreScreen();
         break;
+    case GameState::TUTORIAL:
+        renderTutorialScreen();
+        break;
     case GameState::GAME_OVER:
         if (gameWon) {
             renderWinScreen();
@@ -145,6 +148,9 @@ void Game::renderMainMenu() {
     
 
     renderButton(startButton);
+    renderButton(tutorialButton);
+    renderButton(highScoresButton);
+	renderButton(settingButton);
     renderButton(quitButton);
     renderDifficultyButton(easyButton);
     renderDifficultyButton(mediumButton);
@@ -154,7 +160,7 @@ void Game::renderMainMenu() {
 
     SDL_Color titleColor = { 225, 96, 0, 255 };
     renderText("Honehoover", SCREEN_WIDTH / 2 - 100, 100, titleColor);
-    renderButton(highScoresButton);
+    
     SDL_Color difficultyColor = { 0, 0, 0, 255 };
     string difficultyText = "Difficulty: " + difficultyToString(currentDifficulty);
     renderCenteredText(difficultyText, startButton.rect.y - 50, difficultyColor);
@@ -177,7 +183,7 @@ void Game::renderGameScreen() {
         Mix_PlayMusic(gameplayMusic, -1);
     }
 
-    SDL_Color textColor = { 50, 255, 50, 255 };
+    SDL_Color textColor = { 0, 150, 225, 255 };
     string timeText = "Time: " + to_string(elapsedSeconds) + " s";
     renderText(timeText, SCREEN_WIDTH - 360, TRUE_SCREEN_HEIGHT - 40, textColor);
 
@@ -235,6 +241,36 @@ void Game::renderHighScoreScreen() {
 
     displayHighScores();
     renderBackButton(backButton);
+    SDL_RenderPresent(renderer);
+}
+
+void Game::renderTutorialScreen() {
+    SDL_Texture* backgroundTexture = textures["mmnbg"];
+    if (backgroundTexture) {
+        SDL_Rect renderQuad = { 0, 0, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT };
+        SDL_RenderCopy(renderer, backgroundTexture, nullptr, &renderQuad);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 0xAA, 0xFF, 0xDD, 255);
+        SDL_RenderClear(renderer);
+    }
+    board.render(renderer, font, SCREEN_WIDTH, SCREEN_HEIGHT, textures);
+
+    SDL_Color textColor = { 0, 0, 0, 255 }; 
+    string tutorialText = tutorialSteps[currentTutorialStep];
+    renderText(tutorialText, BUTTON_WIDTH/2+10, TRUE_SCREEN_HEIGHT - 40, textColor);
+
+    string stepCounterText = "Step " + to_string(currentTutorialStep + 1) + " of " + to_string(tutorialSteps.size());
+    //renderText(stepCounterText, (SCREEN_WIDTH - BUTTON_WIDTH) / 2, (SCREEN_HEIGHT / 2) + 50, textColor);
+
+    renderBackButton(backButton);
+    
+    textColor = { 0, 150, 225, 255 };
+    string timeText = "Time: " + to_string(elapsedSeconds) + " s";
+
+    string flagText = "Flags: " + to_string(remainingFlags);
+    renderText(flagText, SCREEN_WIDTH - 140, TRUE_SCREEN_HEIGHT - 40, textColor);
+
     SDL_RenderPresent(renderer);
 }
 

@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <numeric>
 #include <SDL_ttf.h>
 
 
@@ -210,7 +209,6 @@ void Board::render(SDL_Renderer* renderer, TTF_Font* font, int screenWidth, int 
             SDL_RenderDrawRect(renderer, &cellRect);
 
             if (cells[y][x].isRevealed() && !cells[y][x].isMine() && cells[y][x].getAdjacentMines() > 0) {
-                // Render the number of adjacent mines
                 SDL_Color textColor;
                 switch (cells[y][x].getAdjacentMines()) {
                 case 1: textColor = { 0, 0, 255, 255 }; break;  // Blue

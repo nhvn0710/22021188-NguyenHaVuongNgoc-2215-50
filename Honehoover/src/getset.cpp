@@ -128,3 +128,16 @@ void Game::setCustomDifficulty(int sliderVal)
     int mineCount = static_cast<int>(difficulties[0].mineCount + sliderVal * (0.5 + (static_cast<double>(sliderVal) * sliderVal) / 2000));
     customDifficulty = { width, height, mineCount, true };
 }
+
+void Game::loadTutorialSteps()
+{
+    tutorialSteps = {
+        "Welcome to the Honehoover tutorial!",
+        "Left-click on a cell to reveal it. Try now!",
+        "Right-click to place on suspected mine.",
+        "Right-click on opened cell for a quick clear.",
+        "Clear all cells without stumbling on a mine!"
+    };
+    currentTutorialStep = 0;
+}
+
