@@ -40,6 +40,7 @@ void Game::loadTextures() {
         textures["bttn2"] = loadTexture("../resources/image/bttn2.png");
         textures["mmnbg"] = loadTexture("../resources/image/mmnbg.png");
         textures["ldbbg"] = loadTexture("../resources/image/ldbbg.png");
+        textures["govbg"] = loadTexture("../resources/image/govbg.png");
 
         textures["music_on"] = loadTexture("../resources/image/music_on.png");
         textures["music_off"] = loadTexture("../resources/image/music_off.png");
@@ -63,6 +64,7 @@ void Game::loadTextures() {
         textures["bttn2"] = loadTexture("../resources/image/bttn22.png");
         textures["mmnbg"] = loadTexture("../resources/image/mmnbg2.png");
         textures["ldbbg"] = loadTexture("../resources/image/ldbbg2.png");
+        textures["govbg"] = loadTexture("../resources/image/govbg2.png");
 
         textures["music_on"] = loadTexture("../resources/image/music_on2.png");
         textures["music_off"] = loadTexture("../resources/image/music_off2.png");

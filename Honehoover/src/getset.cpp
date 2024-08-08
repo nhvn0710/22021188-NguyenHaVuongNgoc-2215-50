@@ -20,7 +20,6 @@ void Game::loadTutorialSteps()
     currentTutorialStep = 0;
 }
 
-
 const Uint8 Game::clamp(const int val, const int lower, const int upper) {
     if (val < lower) return lower;
     else if (val > upper) return upper;
