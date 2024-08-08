@@ -191,6 +191,12 @@
     <Image Include="..\resources\image\grass2.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\resources\image\govbg2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\govbg.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\resources\mixer\button.mp3">

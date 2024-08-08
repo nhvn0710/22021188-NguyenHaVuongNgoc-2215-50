@@ -62,6 +62,8 @@
     <Image Include="..\resources\image\extralive_on2.png" />
     <Image Include="..\resources\image\frame.png" />
     <Image Include="..\resources\image\frame2.png" />
+    <Image Include="..\resources\image\govbg.png" />
+    <Image Include="..\resources\image\govbg2.png" />
     <Image Include="..\resources\image\grass.png" />
     <Image Include="..\resources\image\grass2.png" />
     <Image Include="..\resources\image\ldbbg.png" />

@@ -68,6 +68,7 @@ private:
     struct HighScore {
         int time;
         DifficultyLevel difficulty;
+        double weight;
     };
 
     struct Toggle {

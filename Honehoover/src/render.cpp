@@ -212,10 +212,24 @@ void Game::renderGameScreen() {
 }
 
 void Game::renderGameOverScreen() {
-    SDL_SetRenderDrawColor(renderer, 255, 200, 200, 255);
-    SDL_RenderClear(renderer);
+    SDL_Texture* backgroundTexture = textures["govbg"];
+    if (backgroundTexture) {
+        SDL_Rect renderQuad = { 0, 0, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT };
+        SDL_RenderCopy(renderer, backgroundTexture, nullptr, &renderQuad);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+    }
 
-    SDL_Color textColor = { 0, 0, 0, 255 };
+    SDL_Color textColor;
+    if (altTexture)
+    {
+        textColor = { 255, 255, 255, 255 };
+    }
+    else {
+        textColor = { 0, 0, 0, 255 };
+    }
     renderText("Game Over!", SCREEN_WIDTH / 2 - 100, 100, textColor);
     renderText("You Lost!", SCREEN_WIDTH / 2 - 80, 150, textColor);
     renderButton(newGameButton);
@@ -223,12 +237,26 @@ void Game::renderGameOverScreen() {
 }
 
 void Game::renderWinScreen() {
-    SDL_SetRenderDrawColor(renderer, 200, 255, 200, 255);
-    SDL_RenderClear(renderer);
+    SDL_Texture* backgroundTexture = textures["govbg"];
+    if (backgroundTexture) {
+        SDL_Rect renderQuad = { 0, 0, SCREEN_WIDTH, TRUE_SCREEN_HEIGHT };
+        SDL_RenderCopy(renderer, backgroundTexture, nullptr, &renderQuad);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+    }
 
-    SDL_Color textColor = { 0, 0, 0, 255 };
+    SDL_Color textColor;
+    if (altTexture)
+    {
+        textColor = { 255, 255, 255, 255 };
+    }
+    else {
+        textColor = { 0, 0, 0, 255 };
+    }
     string timeText = "Time: " + to_string(finalTime) + " seconds";
-    renderText(timeText, SCREEN_WIDTH / 2 - 100, 200, textColor);
+    renderText(timeText, SCREEN_WIDTH / 2 - 120, 200, textColor);
     renderButton(newGameButton);
     renderBackButton(backButton);
     string victoryMessage = "You cleared all mines! Well done!";
@@ -275,8 +303,14 @@ void Game::renderTutorialScreen() {
         SDL_RenderClear(renderer);
     }
     board.render(renderer, font, SCREEN_WIDTH, SCREEN_HEIGHT, textures);
-
-    SDL_Color textColor = { 0, 0, 0, 255 }; 
+    SDL_Color textColor;
+    if (altTexture)
+    {
+        textColor = { 255, 255, 255, 255 };
+    }
+    else {
+        textColor = { 0, 0, 0, 255 };
+    }
     string tutorialText = tutorialSteps[currentTutorialStep];
     renderText(tutorialText, BUTTON_WIDTH/2+10, TRUE_SCREEN_HEIGHT - 40, textColor);
 

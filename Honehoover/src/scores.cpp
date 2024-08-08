@@ -28,10 +28,11 @@ void Game::updateHighScores() {
         HighScore newScore{};
         newScore.time = finalTime;
         newScore.difficulty = currentDifficulty;
+        newScore.weight = (100-sliderValue)*60+1;
 
         isNewHighScore = (find_if(highScores.begin(), highScores.end(),
             [this](const HighScore& score) {
-                return (score.time == finalTime && score.difficulty == currentDifficulty);
+                return (score.time == finalTime && score.difficulty == currentDifficulty && score.weight==sliderValue);
             }) == highScores.end());
 
         highScores.push_back(newScore);
@@ -60,13 +61,10 @@ bool Game::compareHighScores(const HighScore& a, const HighScore& b) {
     int weightA = a.difficulty == DifficultyLevel::VERYHARD ? 1 : a.difficulty == DifficultyLevel::HARD ? 4 : a.difficulty == DifficultyLevel::MEDIUM ? 50 : 600;
     int weightB = b.difficulty == DifficultyLevel::VERYHARD ? 1 : b.difficulty == DifficultyLevel::HARD ? 4 : b.difficulty == DifficultyLevel::MEDIUM ? 50 : 600;
     if (a.difficulty == DifficultyLevel::CUSTOM) {
-        weightA = 1000;
-        // 0     32    50    72   100
-        // 100   68    50    28   0
-        // 6000  500   40    10   1   
+        weightA = a.weight;
     }
     if (b.difficulty == DifficultyLevel::CUSTOM) {
-        weightB = 1000;
+        weightB = b.weight;
     }
     return ((a.difficulty == DifficultyLevel::EASY) ? a.time + 10 : a.time) * weightA < ((b.difficulty == DifficultyLevel::EASY) ? b.time + 10 : b.time) * weightB;
 }
@@ -80,7 +78,7 @@ void Game::displayHighScores() {
         string difficultyName = (score.difficulty == DifficultyLevel::EASY ? "Easy" :
             score.difficulty == DifficultyLevel::MEDIUM ? "Medium" :
             score.difficulty == DifficultyLevel::HARD ? "Hard" :
-            score.difficulty == DifficultyLevel::VERYHARD ? "Hard" : "Unknown");
+            score.difficulty == DifficultyLevel::VERYHARD ? "Very Hard" : "Unknown");
         string text = difficultyName + " - " + to_string(score.time) + "s";
         renderCenteredText(text, yPosition, color);
         yPosition += 30;
