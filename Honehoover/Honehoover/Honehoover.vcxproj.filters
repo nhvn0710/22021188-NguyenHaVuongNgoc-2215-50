@@ -197,6 +197,24 @@
     <Image Include="..\resources\image\govbg.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\resources\image\Screenshot03.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\Screenshot04.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\Screenshot05.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\Screenshot02.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\Screenshot01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\image\Screenshot06.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\resources\mixer\button.mp3">
