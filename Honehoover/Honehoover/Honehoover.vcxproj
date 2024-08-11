@@ -75,6 +75,11 @@
     <Image Include="..\resources\image\music_on2.png" />
     <Image Include="..\resources\image\pylon.png" />
     <Image Include="..\resources\image\pylon2.png" />
+    <Image Include="..\resources\image\Screenshot01.png" />
+    <Image Include="..\resources\image\Screenshot02.png" />
+    <Image Include="..\resources\image\Screenshot03.png" />
+    <Image Include="..\resources\image\Screenshot04.png" />
+    <Image Include="..\resources\image\Screenshot05.png" />
     <Image Include="..\resources\image\sound_off.png" />
     <Image Include="..\resources\image\sound_off2.png" />
     <Image Include="..\resources\image\sound_on.png" />

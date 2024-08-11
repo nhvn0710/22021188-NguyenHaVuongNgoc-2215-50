@@ -79,6 +79,18 @@ High scores are saved in a file named `highscores.txt` in the same directory as 
 This game was created using SDL2 and its extension libraries. 
 Some of the game assets (images and sounds) used are from freesound.org and craftpix.net.
 
+## Preview
+
+![Screenshot](Honehoover/resources/image/Screenshot01.png)
+
+![Screenshot](Honehoover/resources/image/Screenshot02.png)
+
+![Screenshot](Honehoover/resources/image/Screenshot03.png)
+
+![Screenshot](Honehoover/resources/image/Screenshot04.png)
+
+![Screenshot](Honehoover/resources/image/Screenshot05.png)
+
 
 ## License
 
