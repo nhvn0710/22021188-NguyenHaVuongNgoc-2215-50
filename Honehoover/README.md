@@ -72,6 +72,9 @@ or change difficulty levels in the `Game::difficulties` array in `getset.cpp`.
 ## High Scores
 
 High scores are saved in a file named `highscores.txt` in the same directory as the executable.
+The high score calculating algorithm is demonstrated by this graph below:
+
+![Screenshot](resources/image/Screenshot06.png)
 
 
 ## Credits
@@ -81,15 +84,15 @@ Some of the game assets (images and sounds) used are from freesound.org and craf
 
 ## Preview
 
-![Screenshot](Honehoover/resources/image/Screenshot01.png)
+![Screenshot](resources/image/Screenshot01.png)
 
-![Screenshot](Honehoover/resources/image/Screenshot02.png)
+![Screenshot](resources/image/Screenshot02.png)
 
-![Screenshot](Honehoover/resources/image/Screenshot03.png)
+![Screenshot](resources/image/Screenshot03.png)
 
-![Screenshot](Honehoover/resources/image/Screenshot04.png)
+![Screenshot](resources/image/Screenshot04.png)
 
-![Screenshot](Honehoover/resources/image/Screenshot05.png)
+![Screenshot](resources/image/Screenshot05.png)
 
 
 ## License

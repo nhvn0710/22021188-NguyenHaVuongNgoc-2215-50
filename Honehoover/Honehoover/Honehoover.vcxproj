@@ -80,6 +80,7 @@
     <Image Include="..\resources\image\Screenshot03.png" />
     <Image Include="..\resources\image\Screenshot04.png" />
     <Image Include="..\resources\image\Screenshot05.png" />
+    <Image Include="..\resources\image\Screenshot06.png" />
     <Image Include="..\resources\image\sound_off.png" />
     <Image Include="..\resources\image\sound_off2.png" />
     <Image Include="..\resources\image\sound_on.png" />

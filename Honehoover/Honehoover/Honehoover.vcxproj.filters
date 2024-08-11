@@ -212,6 +212,9 @@
     <Image Include="..\resources\image\Screenshot01.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\resources\image\Screenshot06.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\resources\mixer\button.mp3">
